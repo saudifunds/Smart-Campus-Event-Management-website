@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Login to Smart Campus Event Management System">
+  <title>Smart Campus | Login</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="Assets/logo.png">
+</head>
+
+<body class="auth-body">
+  <div class="auth-wrapper">
+
+    <!-- Background Animation -->
+    <div class="background-animation">
+      <div class="shape s1"></div>
+      <div class="shape s2"></div>
+      <div class="shape s3"></div>
+      <div class="shape s4"></div>
+    </div>
+
+    <!-- Left Info Section -->
+    <div class="auth-info">
+      <h1 id="typeText"></h1>
+      <p>Empowering your Smart Campus experience</p>
+    </div>
+
+    <!-- Login Form -->
+    <div class="auth-form">
+      <h2>Login</h2>
+      <input type="email" id="username" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button onclick="loginUser()">Login</button>
+      <p>
+        <a href="signup.html">Create Account</a> |
+        <a href="forgot.html">Forgot Password?</a>
+      </p>
+      <p id="loginMessage" class="message"></p>
+    </div>
+  </div>
+
+  <script src="js/login.js"></script>
+  <script>
+    // Typing animation for login page
+    const text = "Welcome to Smart Campus";
+    const el = document.getElementById("typeText");
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        el.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, 80);
+      }
+    }
+    type();
+  </script>
+
+  <!-- 💬 Smart Campus Assistant -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-header" onclick="toggleChatbot()">
+      <span>💬 Smart Campus Assistant</span>
+      <span id="chatbotToggle">▲</span>
+    </div>
+
+    <div class="chatbot-body" id="chatbotBody">
+      <div id="chatbotMessages" class="chatbot-messages">
+        <div class="bot-message">Hi 👋! I'm your Smart Campus Assistant. How can I help you today?</div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbotInput" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="css/chatbot.css">
+  <script src="js/chatbot.js"></script>
+</body>
+
+</html>

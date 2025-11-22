@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage campus events and class sessions">
+  <title>Smart Campus | Events</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="Assets/logo.png">
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="Assets/logo.png" alt="Logo">
+      <h2>SmartCampus</h2>
+    </div>
+    <nav>
+      <a href="index.html">🏠 Dashboard</a>
+      <a href="rooms.html">🏫 Rooms</a>
+      <a href="events.html" class="active">📅 Events</a>
+      <a href="users.html">👥 Users</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="topbar">
+      <h1>Event & Class Sessions</h1>
+      <button id="openEventModal" class="btn">+ Add Session</button>
+    </header>
+
+    <section class="content">
+      <table class="event-table" id="eventTable">
+        <thead>
+          <tr>
+            <th>Event / Class</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Venue</th>
+            <th>Status</th>
+            <th>Countdown</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal" id="eventModal">
+    <div class="modal-content">
+      <h3>Add Event / Class Session</h3>
+      <form id="eventForm">
+        <label>Event Name:</label>
+        <input type="text" id="eventName" required>
+
+        <label>Date:</label>
+        <input type="date" id="eventDate" required>
+
+        <label>Start Time:</label>
+        <input type="time" id="startTime" required>
+
+        <label>End Time:</label>
+        <input type="time" id="endTime" required>
+
+        <label>Venue:</label>
+        <input type="text" id="eventVenue" required>
+
+        <button type="submit" class="btn">Save</button>
+        <button type="button" id="closeEventModal" class="btn cancel">Cancel</button>
+      </form>
+    </div>
+  </div>
+  <!-- Notifications -->
+  <div id="notificationContainer" class="notification-container"></div>
+
+  <!-- 💬 Smart Campus Assistant -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-header" onclick="toggleChatbot()">
+      <span>💬 Smart Campus Assistant</span>
+      <span id="chatbotToggle">▲</span>
+    </div>
+
+    <div class="chatbot-body" id="chatbotBody">
+      <div id="chatbotMessages" class="chatbot-messages">
+        <div class="bot-message">Hi 👋! I'm your Smart Campus Assistant. How can I help you today?</div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbotInput" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="css/chatbot.css">
+  <script src="js/auth.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/chatbot.js"></script>
+</body>
+
+</html>

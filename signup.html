@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Create an account for Smart Campus Event Management System">
+  <title>Smart Campus | Sign Up</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="Assets/logo.png">
+</head>
+
+<body class="auth-body">
+  <div class="auth-wrapper">
+    <!-- Background Animation -->
+    <div class="background-animation">
+      <div class="shape s1"></div>
+      <div class="shape s2"></div>
+      <div class="shape s3"></div>
+      <div class="shape s4"></div>
+    </div>
+
+    <!-- Left Info Section -->
+    <div class="auth-info">
+      <h1 id="typeText"></h1>
+      <p>Join the Smart Campus community</p>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="auth-form">
+      <h2>Create Account</h2>
+      <input type="text" id="signupName" placeholder="Full Name" required />
+      <input type="email" id="signupEmail" placeholder="Email" required />
+      <input type="password" id="signupPassword" placeholder="Password" required />
+      <select id="signupRole" required>
+        <option value="">Select Role</option>
+        <option value="Student">Student</option>
+        <option value="Staff">Staff</option>
+        <option value="Admin">Admin</option>
+      </select>
+      <button onclick="registerUser()">Sign Up</button>
+      <p>Already have an account? <a href="login.html">Login</a></p>
+      <p id="signupMessage" class="message"></p>
+    </div>
+  </div>
+
+  <script src="js/signup.js"></script>
+  <script>
+    // Typing animation for signup page
+    const text = "Join Smart Campus Today";
+    const el = document.getElementById("typeText");
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        el.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, 80);
+      }
+    }
+    type();
+  </script>
+
+  <!-- 💬 Smart Campus Assistant -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-header" onclick="toggleChatbot()">
+      <span>💬 Smart Campus Assistant</span>
+      <span id="chatbotToggle">▲</span>
+    </div>
+
+    <div class="chatbot-body" id="chatbotBody">
+      <div id="chatbotMessages" class="chatbot-messages">
+        <div class="bot-message">Hi 👋! I'm your Smart Campus Assistant. How can I help you today?</div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbotInput" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="css/chatbot.css">
+  <script src="js/chatbot.js"></script>
+</body>
+
+</html>

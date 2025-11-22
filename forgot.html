@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Reset your password for Smart Campus Event Management System">
+  <title>Smart Campus | Forgot Password</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="Assets/logo.png">
+</head>
+
+<body class="auth-body">
+  <div class="auth-wrapper">
+    <!-- Animated Background -->
+    <div class="background-animation">
+      <div class="shape s1"></div>
+      <div class="shape s2"></div>
+      <div class="shape s3"></div>
+      <div class="shape s4"></div>
+    </div>
+
+    <!-- Left Info Section -->
+    <div class="auth-info">
+      <h1 id="typeText"></h1>
+      <p>Reset your access to Smart Campus</p>
+    </div>
+
+    <!-- Forgot Password Form -->
+    <div class="auth-form">
+      <h2>Forgot Password</h2>
+      <p style="text-align:center; font-size:0.95em; color:#555; margin-bottom:15px;">
+        Enter your registered email to reset your password.
+      </p>
+
+      <input type="email" id="forgotEmail" placeholder="Enter your email" required />
+      <button id="resetBtn" onclick="resetPassword()">Send Reset Link</button>
+      <p style="text-align:center; margin-top:10px;">
+        <a href="login.html">Back to Login</a>
+      </p>
+
+      <p id="forgotMessage" class="message"></p>
+    </div>
+
+    <!-- Pop-up Confirmation -->
+    <div id="popup" class="popup hidden">
+      <div class="popup-content">
+        <div class="loader"></div>
+        <h3 id="popupTitle">Sending reset link...</h3>
+        <p id="popupText">Please wait a moment.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Typing animation
+    const text = "Forgot Your Password?";
+    const el = document.getElementById("typeText");
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        el.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, 80);
+      }
+    }
+    type();
+
+    // Handle password reset
+    function resetPassword() {
+      const email = document.getElementById("forgotEmail").value.trim();
+      const popup = document.getElementById("popup");
+      const popupTitle = document.getElementById("popupTitle");
+      const popupText = document.getElementById("popupText");
+      const msg = document.getElementById("forgotMessage");
+
+      if (!email) {
+        msg.style.color = "red";
+        msg.textContent = "⚠️ Please enter your registered email.";
+        return;
+      }
+
+      // Show popup
+      popup.classList.remove("hidden");
+      popupTitle.textContent = "Sending reset link...";
+      popupText.textContent = "Please wait while we process your request.";
+
+      // Simulate sending process
+      setTimeout(() => {
+        popupTitle.textContent = "✅ Reset Link Sent!";
+        popupText.textContent = `A reset link has been sent to ${email}`;
+        document.querySelector(".loader").style.display = "none";
+
+        // Redirect to login after 3s
+        setTimeout(() => {
+          popup.classList.add("hidden");
+          window.location.href = "login.html";
+        }, 3000);
+      }, 2500);
+    }
+  </script>
+
+  <!-- 💬 Smart Campus Assistant -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-header" onclick="toggleChatbot()">
+      <span>💬 Smart Campus Assistant</span>
+      <span id="chatbotToggle">▲</span>
+    </div>
+
+    <div class="chatbot-body" id="chatbotBody">
+      <div id="chatbotMessages" class="chatbot-messages">
+        <div class="bot-message">Hi 👋! I'm your Smart Campus Assistant. How can I help you today?</div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbotInput" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="css/chatbot.css">
+  <script src="js/chatbot.js"></script>
+</body>
+
+</html>

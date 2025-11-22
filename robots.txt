@@ -1,0 +1,10 @@
+# robots.txt for Smart Campus Event Management System
+
+User-agent: *
+Allow: /
+Disallow: /js/
+Disallow: /css/
+
+# Sitemap (add your domain when deployed)
+# Sitemap: https://yourdomain.com/sitemap.xml
+
