@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Manage campus events and class sessions">
   <title>Smart Campus | Events</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" type="image/png" href="Assets/logo.png">
 </head>
@@ -18,10 +19,10 @@
       <h2>SmartCampus</h2>
     </div>
     <nav>
-      <a href="index.html">🏠 Dashboard</a>
-      <a href="rooms.html">🏫 Rooms</a>
-      <a href="events.html" class="active">📅 Events</a>
-      <a href="users.html">👥 Users</a>
+      <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="rooms.html"><i class="fas fa-door-open"></i> Rooms</a>
+      <a href="events.html" class="active"><i class="fas fa-calendar-check"></i> Events</a>
+      <a href="users.html"><i class="fas fa-users-gear"></i> Users</a>
     </nav>
   </aside>
 
@@ -29,13 +30,14 @@
   <main class="main">
     <header class="topbar">
       <h1>Event & Class Sessions</h1>
-      <button id="openEventModal" class="btn">+ Add Session</button>
+      <button id="openEventModal" class="btn"><i class="fas fa-plus"></i> Add Session</button>
     </header>
 
     <section class="content">
       <table class="event-table" id="eventTable">
         <thead>
           <tr>
+            <th>Image</th>
             <th>Event / Class</th>
             <th>Start Time</th>
             <th>End Time</th>
@@ -69,6 +71,9 @@
 
         <label>Venue:</label>
         <input type="text" id="eventVenue" required>
+        
+        <label>Image (Optional):</label>
+        <input type="file" id="eventImage" accept="image/*">
 
         <button type="submit" class="btn">Save</button>
         <button type="button" id="closeEventModal" class="btn cancel">Cancel</button>
@@ -97,6 +102,7 @@
   </div>
 
   <link rel="stylesheet" href="css/chatbot.css">
+  <script src="js/api.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/events.js"></script>
   <script src="js/chatbot.js"></script>

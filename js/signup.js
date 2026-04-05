@@ -1,4 +1,4 @@
-function registerUser() {
+async function registerUser() {
   const name = document.getElementById("signupName").value.trim();
   const email = document.getElementById("signupEmail").value.trim();
   const password = document.getElementById("signupPassword").value.trim();
@@ -11,25 +11,20 @@ function registerUser() {
     return;
   }
 
-  // Retrieve or create users array
-  const users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+  try {
+    await apiRequest("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ name, email, password, role }),
+    });
 
-  // Check if email already exists
-  const exists = users.find((u) => u.email === email);
-  if (exists) {
+    message.style.color = "green";
+    message.textContent = "Account created successfully! Redirecting to login...";
+
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1500);
+  } catch (err) {
     message.style.color = "red";
-    message.textContent = "Email already registered. Please login.";
-    return;
+    message.textContent = err.message || "Unable to create account.";
   }
-
-  // Save new user
-  users.push({ name, email, password, role });
-  localStorage.setItem("registeredUsers", JSON.stringify(users));
-
-  message.style.color = "green";
-  message.textContent = "Account created successfully! Redirecting...";
-
-  setTimeout(() => {
-    window.location.href = "login.html";
-  }, 1500);
 }

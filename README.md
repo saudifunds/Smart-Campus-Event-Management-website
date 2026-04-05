@@ -5,67 +5,170 @@ A web-based event management system for campuses with role-based access control 
 ## Features
 
 - **Role-Based Access Control**: Different permissions for Admin, Staff, and Students
-- **Event Management**: Create, view, and manage campus events and class sessions
+- **Event Management**:
+  - **Admin & Staff**: Create, edit, and manage all campus events
+  - **Students**: View-only access to all campus events with status and countdown
+- **Calendar View**: Visual monthly calendar with event details (All roles)
+  - Click dates to see events
+  - Color-coded event status
+  - Event count badges
+- **Event Notifications**: Real-time alerts and reminders
+  - New event creation notifications
+  - 5-minute before event warning
+  - Event started notifications
+  - Dismissible toast notifications
 - **Room Management**: Track room availability, capacity, and status
 - **User Management**: Admin can manage users and their roles
-- **Real-time Countdown**: Live countdown timers for upcoming events
+- **Real-time Event Status**: Live status updates (Upcoming/Active/Expired)
 - **Responsive Design**: Works on desktop and mobile devices
 - **Dark Mode Support**: Built-in dark mode styling
 
 ## Technology Stack
 
 - **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Storage**: localStorage (client-side data persistence)
-- **No Backend Required**: Fully client-side application
+- **Backend**: Node.js (Express) with SQLite database
+- **Auth**: JWT (JSON Web Tokens) + bcrypt password hashing
+
+> The original version was fully client-side using localStorage; it has now been upgraded with a proper backend API.
 
 ## Project Structure
 
-```
+```text
 Smart Campus Event Management website/
 ├── Assets/
 │   └── logo.png
 ├── css/
 │   └── style.css
 ├── js/
-│   ├── auth.js          # Authentication & access control
-│   ├── events.js        # Event management logic
-│   ├── forgot.js        # Password recovery
-│   ├── login.js         # Login functionality
-│   ├── rooms.js         # Room management
-│   ├── script.js        # Dashboard logic
-│   ├── signup.js        # User registration
-│   └── users.js         # User management
+│   ├── api.js                    # Shared API helper (fetch wrapper + auth token)
+│   ├── auth.js                   # Authentication & access control (role + token)
+│   ├── calendar.js               # Calendar view (all roles)
+│   ├── events.js                 # Event management (Admin/Staff, create/edit/delete)
+│   ├── student-manage-events.js  # Student event view (read-only)
+│   ├── forgot.js                 # Password recovery (demo flow)
+│   ├── login.js                  # Login (calls /api/auth/login)
+│   ├── rooms.js                  # Room management (talks to /api/rooms)
+│   ├── script.js                 # Dashboard logic
+│   ├── signup.js                 # User registration (calls /api/auth/register)
+│   ├── users.js                  # User management (Admin, talks to /api/users)
+│   └── chatbot.js                # Chatbot logic
+├── backend/
+│   ├── package.json
+│   ├── database.sqlite  # SQLite database (auto-created)
+│   └── src/
+│       ├── app.js
+│       ├── server.js
+│       ├── db.js
+│       ├── middleware/
+│       │   └── auth.js
+│       └── routes/
+│           ├── auth.js
+│           ├── events.js
+│           ├── rooms.js
+│           └── users.js
+├── calendar.html                 # Event calendar view (all roles)
 ├── events.html
+├── student-manage-events.html    # Student event viewing (read-only)
 ├── forgot.html
-├── index.html           # Dashboard
+├── index.html                    # Dashboard
 ├── login.html
 ├── rooms.html
 ├── signup.html
 ├── users.html
-└── 404.html             # Error page
+└── 404.html                      # Error page
 ```
 
 ## Getting Started
 
-### Local Development
+### 1. Backend (Node.js API)
 
-1. Clone or download this repository
-2. Open `index.html` in a web browser
-3. Register a new account (Admin role recommended for full access)
-4. Start managing events, rooms, and users
+#### Prerequisites
 
-### Initial Setup
+- Node.js 18+ installed
 
-1. Navigate to `signup.html` to create your first admin account
-2. Select "Admin" role during registration
-3. Log in with your credentials
-4. Begin using the system
+#### Install and run
+
+```bash
+cd backend
+npm install
+npm start
+```
+
+The API base URL used by the frontend is:
+
+- `http://localhost:4000/api`
+
+Keep this terminal window running while you use the frontend.
+
+### 2. Frontend (HTML/CSS/JS)
+
+For quick local use you can open the HTML files directly in a browser, or serve the folder with a simple static server.
+
+## Basic flow:
+
+1. Open `signup.html` in a browser.
+2. Create your first account (choose a **role**: Admin, Staff, or Student).
+3. After successful signup you will be redirected to `login.html`.
+4. Log in and you will land on `index.html` (dashboard).
+5. Based on your role:
+   - **Admin/Staff**: Access `events.html` to create, edit, and delete events
+   - **Student**: Access `student-manage-events.html` to view all campus events (read-only)
+
+## Role-Based Event Access
+
+### Admin & Staff (Officials)
+- **Page**: `events.html`
+- **Can**: Create new events, edit any event, delete any event
+- **Event Form**: Full event management with add/edit modal
+
+### Student
+- **Page**: `student-manage-events.html`
+- **Can**: View all campus events with current status
+- **Status Display**: Upcoming, Active, or Expired
+- **Cannot**: Create, edit, or delete events
+- **Auto-refresh**: Event status updates every 30 seconds
+
+## Calendar View & Notifications
+
+### Calendar Feature (`calendar.html`)
+- **Available to**: All authenticated users (Admin, Staff, Student)
+- **Features**:
+  - Visual monthly calendar with all campus events
+  - Click any date to see events scheduled that day
+  - Event count badges on dates with multiple events
+  - Color-coded status dots (Upcoming, Active, Expired)
+  - Today's date highlighted
+  - Navigation between months
+  - Event details sidebar with time, venue, status
+
+### Event Notifications
+- **Real-time toast notifications** appear in top-right corner
+- **Notification Types**:
+  - ✅ Success notifications - Event created/updated/deleted
+  - ⚠️ Warning notifications - Event starting soon
+  - 🚀 Active notifications - Event now happening
+  - ℹ️ Info notifications - General updates
+  - ❌ Error notifications - Operation failures
+
+- **Notification Triggers**:
+  - Admin/Staff: "New event created! Students will be notified."
+  - 5 minutes before: "Event starting in 5 minutes"
+  - When event starts: "Event now happening!"
+  - Students: Get reminders 30 min before event
 
 ## Deployment
 
-### Option 1: Static Web Hosting (Recommended)
+> The frontend can still be hosted as static files, but the backend now requires a Node.js environment (or container) to run.
 
-The application is a static website and can be deployed to any static hosting service:
+### Option 1: Frontend + Backend on a Node-capable host
+
+- Deploy the `backend/` folder as a Node.js app (Render, Railway, VPS, etc.).
+- Deploy the static frontend (`*.html`, `css/`, `js/`, `Assets/`) on the same domain or another domain.
+- Update `API_BASE_URL` in `js/api.js` to point to your deployed backend.
+
+### Option 2: Frontend on Static Hosting, Backend elsewhere
+
+The frontend can be deployed to any static hosting service:
 
 #### **Netlify**
 1. Push code to GitHub/GitLab
@@ -91,48 +194,64 @@ The application is a static website and can be deployed to any static hosting se
 3. Configure server to serve index.html for all routes (see `.htaccess` for Apache)
 4. Access via your domain name
 
-### Option 2: Docker (Optional)
+### Option 3: Docker (Optional)
+
+Example backend Dockerfile (inside `backend/`):
 
 ```dockerfile
-FROM nginx:alpine
-COPY . /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --only=production
+COPY . .
+EXPOSE 4000
+CMD ["npm", "start"]
 ```
+
+You can then host the frontend separately via Nginx/Netlify/etc.
 
 ## Configuration
 
-### Important Notes
+### Backend environment
 
-1. **localStorage**: All data is stored in browser localStorage. This means:
-   - Data is per-browser/per-device
-   - Data will be lost if localStorage is cleared
-   - For production, consider migrating to a backend database
+The backend uses the following environment variables (optional):
 
-2. **Case Sensitivity**: Ensure folder names match exactly (especially `Assets` vs `assets` on Linux servers)
+- `PORT` – port for the backend server (default: `4000`).
+- `JWT_SECRET` – secret key for signing JWTs (default is a dev value; set a strong one in production).
 
-3. **HTTPS**: For production, always use HTTPS. Most hosting providers offer free SSL certificates.
+### Frontend API base URL
+
+- `js/api.js` contains `API_BASE_URL`, which defaults to `http://localhost:4000/api`.
+- For production, change this to your deployed backend URL.
+
+### Event Creation Restrictions
+
+- Only **Admin** and **Staff** users can create new events via `POST /api/events`.
+- **Students** attempting to create events will receive a **403 Forbidden** error.
+- This is enforced both on the frontend (page access) and backend (role check).
+
+### Other Notes
+
+1. **Case Sensitivity**: Ensure folder names match exactly (especially `Assets` vs `assets` on Linux servers).
+2. **HTTPS**: For production, always use HTTPS. Most hosting providers offer free SSL certificates.
 
 ## Security Considerations
 
-⚠️ **Current Implementation Notes**:
-- Passwords are stored in plain text in localStorage (NOT secure for production)
-- No server-side validation
-- No HTTPS enforcement in code (configure on server)
+- Passwords are now stored as **bcrypt hashes** in SQLite (not in browser localStorage).
+- Protected API endpoints require a valid **JWT** in the header `Authorization: Bearer <token>`.
+- The frontend still uses localStorage to store `loggedInUser` and the `authToken` (JWT).
 
-### Recommended Security Enhancements for Production:
+### Recommended Security Enhancements for Production
 
-1. **Implement Backend API**:
-   - Hash passwords (bcrypt, Argon2)
-   - Implement JWT tokens
-   - Add rate limiting
-   - Server-side validation
-
-2. **Use HTTPS**: Configure SSL/TLS certificates
-
-3. **Add CSP Headers**: Content Security Policy (configure in server)
-
-4. **Environment Variables**: For API endpoints, use environment variables
+1. **Backend hardening**:
+   - Add rate limiting.
+   - Add input validation and sanitization on all endpoints.
+   - Add request and audit logging.
+2. **Transport security**:
+   - Enforce HTTPS.
+   - Add security headers (CSP, HSTS, etc.) via reverse proxy or middleware.
+3. **Secrets management**:
+   - Store `JWT_SECRET` and other secrets in environment variables or a secrets manager.
 
 ## Browser Support
 
@@ -154,26 +273,22 @@ CMD ["nginx", "-g", "daemon off;"]
 - Check that `Assets/logo.png` exists (case-sensitive on Linux)
 - Verify file paths in HTML files
 
-### localStorage Issues
-- Ensure cookies/localStorage are enabled in browser
-- Check browser console for errors
-
-### Authentication Not Working
-- Clear browser localStorage
-- Register a new account
-- Check browser console for JavaScript errors
+### localStorage / Auth Issues
+- Ensure cookies/localStorage are enabled in browser.
+- Make sure the backend is running (`npm start` in the `backend/` folder).
+- Check the browser console and Network tab for failed API calls.
 
 ## Development Roadmap
 
 Potential improvements for production:
-- [ ] Backend API integration
-- [ ] Database storage
+- [x] Backend API integration
+- [x] Database storage
+- [x] Password encryption (bcrypt)
 - [ ] Email notifications
-- [ ] Password encryption
-- [ ] Session management
+- [ ] Session management (refresh tokens, revocation)
 - [ ] Audit logging
 - [ ] Export/Import functionality
-- [ ] API documentation
+- [ ] API documentation (OpenAPI/Swagger)
 
 ## License
 
@@ -185,11 +300,11 @@ For issues or questions, please check the browser console for error messages and
 
 ---
 
-**Ready for Deployment Checklist:**
+**Ready for Deployment Checklist (Frontend + Backend):**
 - ✅ All HTML files have proper meta tags
 - ✅ Asset paths are correct
 - ✅ Error page (404.html) created
 - ✅ robots.txt configured
-- ✅ .htaccess for Apache servers
-- ⚠️ Remember: Passwords are in plain text - implement backend for production!
-
+- ✅ .htaccess for Apache servers (if using Apache)
+- ✅ Backend Node.js server running and reachable from the frontend
+- ✅ `API_BASE_URL` in `js/api.js` points to the correct backend URL

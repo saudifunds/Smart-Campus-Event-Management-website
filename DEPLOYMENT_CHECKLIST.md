@@ -13,7 +13,7 @@ Use this checklist to ensure your site is ready for production deployment.
 - [x] Logo image exists in `Assets/logo.png`
 
 ### Code Quality
-- [x] No hardcoded localhost URLs
+- [ ] `API_BASE_URL` in `js/api.js` updated for production backend URL
 - [x] No console.log statements (or removed for production)
 - [x] No TODO/FIXME comments in production code
 - [x] HTML structure is valid (all tags properly closed)
@@ -27,8 +27,12 @@ Use this checklist to ensure your site is ready for production deployment.
 
 ### Features
 - [x] Chatbot functionality on all pages
-- [x] Role-based access control working
-- [x] Authentication system functional
+- [x] Role-based access control working (Admin, Staff, Student)
+- [x] Authentication system functional (JWT + bcrypt)
+- [x] Event management: Admin/Staff can create, edit, delete events
+- [x] Event viewing: Students can view events (read-only)
+- [x] Calendar view: All roles can view monthly calendar
+- [x] Event notifications: Toast alerts for create/update/delete/reminders
 - [x] All pages accessible and working
 
 ## 📋 Deployment Steps
@@ -69,10 +73,27 @@ Use this checklist to ensure your site is ready for production deployment.
 
 ### 2. Post-Deployment Tasks
 
-- [ ] Test login/signup functionality
-- [ ] Test all role-based permissions
+- [ ] Test login/signup functionality with different roles
+- [ ] **Test Admin/Staff**: Create, edit, and delete events via `events.html`
+- [ ] **Test Student**: View events as read-only via `student-manage-events.html`
+- [ ] **Test Calendar**: All roles can access `calendar.html`
+  - [ ] Click dates to see events
+  - [ ] Check event status indicators (dots/badges)
+  - [ ] Navigate between months
+  - [ ] Verify today's date is highlighted
+- [ ] **Test Notifications**:
+  - [ ] Admin creates event → "✅ Event created" notification appears
+  - [ ] Admin updates event → "✏️ Event updated" notification
+  - [ ] Admin deletes event → "🗑️ Event deleted" notification
+  - [ ] Student sees 30-min before warning when near event time
+  - [ ] Student sees "🎉 Event started!" when event begins
+  - [ ] Notifications auto-dismiss after 6 seconds
+  - [ ] Check notifications appear in top-right corner
+- [ ] Verify students cannot access event management page (`events.html`)
+- [ ] Verify students get 403 error when trying to POST/PUT/DELETE events (check console)
+- [ ] Test all role-based permissions (users, events, rooms)
 - [ ] Verify chatbot works on all pages
-- [ ] Check mobile responsiveness
+- [ ] Check mobile responsiveness (test calendar on mobile)
 - [ ] Test 404 error page (visit a non-existent URL)
 - [ ] Verify HTTPS is working (if applicable)
 - [ ] Check browser console for errors
@@ -97,10 +118,9 @@ If using a custom domain:
 ## ⚠️ Important Notes
 
 ### Security Warnings
-- **Passwords are stored in plain text** in localStorage (NOT secure for production)
-- For production use, implement:
-  - Backend API with password hashing
-  - JWT authentication
+- Backend now uses **bcrypt** password hashing and **JWT** auth.
+- For production use, ensure:
+  - Strong `JWT_SECRET` set via environment variable
   - HTTPS enforcement
   - Rate limiting
   - Server-side validation
@@ -111,10 +131,8 @@ If using a custom domain:
 - ES6+ JavaScript features used
 
 ### Data Storage
-- All data is stored in browser localStorage
-- Data is per-browser/device
-- Clearing browser data will remove all saved information
-- For production, consider backend database
+- Data is stored in a SQLite database (`backend/database.sqlite`) on the server.
+- Frontend still stores a small auth session (JWT + user) in localStorage.
 
 ## 🔧 Troubleshooting
 
@@ -137,6 +155,22 @@ If using a custom domain:
 - Clear browser localStorage
 - Check browser console for errors
 - Verify all JS files are loaded in correct order
+- Test role-based access: Admin can create events, Students cannot
+
+### Event Access Issues
+- **Admin/Staff should see**: `events.html` with create/edit/delete buttons
+- **Students should see**: `student-manage-events.html` with read-only table
+- **Students should NOT see**: Event management page or create buttons
+- Check backend response for 403 errors when students try to create events
+
+### Calendar & Notification Issues
+- **Calendar not loading**: Check backend API at `http://localhost:4000/api/events`
+- **No events showing**: Verify events exist in database and have correct date format (YYYY-MM-DD)
+- **Notifications not appearing**: Check browser console for JS errors
+- **Notifications duplicate**: Clear localStorage with `localStorage.clear()` and reload
+- **Calendar dates wrong**: Verify browser timezone is correct
+- **Mobile calendar broken**: Check CSS responsiveness rules (at bottom of style.css)
+- **Notifications disappear too fast**: Set longer timeout in js/events.js (currently 6 seconds)
 
 ## 📞 Support
 

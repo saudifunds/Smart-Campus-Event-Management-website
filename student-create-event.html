@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create and publish campus events">
+  <title>Smart Campus | Create Event</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="Assets/logo.png">
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="Assets/logo.png" alt="Logo">
+      <h2>SmartCampus</h2>
+    </div>
+    <nav>
+      <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="student-create-event.html" class="active"><i class="fas fa-plus-circle"></i> Create Event</a>
+      <a href="student-manage-events.html"><i class="fas fa-list-check"></i> My Events</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="topbar">
+      <h1>Create New Event</h1>
+    </header>
+
+    <section class="content">
+      <div class="form-container" style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <form id="createEventForm">
+          <div class="form-group">
+            <label for="eventName">Event Name: <span style="color: red;">*</span></label>
+            <input type="text" id="eventName" required placeholder="e.g., Tech Talk, Sports Day">
+          </div>
+
+          <div class="form-group">
+            <label for="eventDate">Date: <span style="color: red;">*</span></label>
+            <input type="date" id="eventDate" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+              <label for="startTime">Start Time: <span style="color: red;">*</span></label>
+              <input type="time" id="startTime" required>
+            </div>
+
+            <div class="form-group" style="flex: 1;">
+              <label for="endTime">End Time: <span style="color: red;">*</span></label>
+              <input type="time" id="endTime" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="eventVenue">Venue: <span style="color: red;">*</span></label>
+            <input type="text" id="eventVenue" required placeholder="e.g., Main Hall, Auditorium A">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn" id="submitBtn">📤 Create Event</button>
+            <button type="reset" class="btn cancel">Clear Form</button>
+          </div>
+        </form>
+
+        <div id="successMessage" style="display: none; margin-top: 20px; padding: 15px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724;">
+          ✅ Event created successfully!
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Notifications -->
+  <div id="notificationContainer" class="notification-container"></div>
+
+  <!-- 💬 Smart Campus Assistant -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-header" onclick="toggleChatbot()">
+      <span>💬 Smart Campus Assistant</span>
+      <span id="chatbotToggle">▲</span>
+    </div>
+
+    <div class="chatbot-body" id="chatbotBody">
+      <div id="chatbotMessages" class="chatbot-messages">
+        <div class="bot-message">Hi 👋! I'm your Smart Campus Assistant. How can I help you today?</div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbotInput" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="css/chatbot.css">
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/student-create-event.js"></script>
+  <script src="js/chatbot.js"></script>
+</body>
+
+</html>

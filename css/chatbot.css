@@ -14,8 +14,8 @@
 }
 
 .chatbot-header {
-  background: linear-gradient(120deg, #0055cc, #00c3b6);
-  color: white;
+  background: linear-gradient(120deg, #2C1A0E, #8B6347);
+  color: #F5ECD7;
   padding: 12px 15px;
   font-weight: 600;
   cursor: pointer;
@@ -38,7 +38,7 @@
   flex: 1;
   padding: 12px;
   overflow-y: auto;
-  background: #f1f5f9;
+  background: #FAF6F0;
 }
 
 .bot-message, .user-message {
@@ -50,19 +50,20 @@
 }
 
 .bot-message {
-  background: #e2e8f0;
+  background: #FDF0E4;
   align-self: flex-start;
+  color: #2C1A0E;
 }
 
 .user-message {
-  background: #0055cc;
-  color: white;
+  background: #C85A3C;
+  color: #fff;
   align-self: flex-end;
 }
 
 .chatbot-input-area {
   display: flex;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #DDBF99;
 }
 
 .chatbot-input-area input {
@@ -71,20 +72,61 @@
   border: none;
   outline: none;
   font-size: 0.9em;
+  background: #FDF9F4;
+  color: #2C1A0E;
 }
 
 .chatbot-input-area button {
-  background: #00c3b6;
+  background: #8B6347;
   border: none;
   padding: 10px 15px;
-  color: white;
+  color: #fff;
   cursor: pointer;
   font-weight: 600;
   transition: background 0.3s;
 }
 
 .chatbot-input-area button:hover {
-  background: #00a091;
+  background: #C85A3C;
+}
+
+/* Typing Indicator Animation */
+.typing-indicator {
+  display: flex !important;
+  align-items: center;
+  gap: 4px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: #999;
+  border-radius: 50%;
+  animation: typingBlink 1.4s infinite;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBlink {
+  0%, 60%, 100% {
+    opacity: 0.5;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+}
+
+/* Faster transitions */
+.chatbot-container {
+  transition: all 0.2s ease !important;
 }
 
 /* Responsive */
@@ -92,5 +134,10 @@
   .chatbot-container {
     width: 90%;
     right: 5%;
+    bottom: 15px;
+  }
+  
+  .chatbot-messages {
+    height: 300px;
   }
 }

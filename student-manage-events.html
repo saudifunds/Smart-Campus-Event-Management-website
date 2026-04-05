@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View all campus events">
+  <title>Smart Campus | Events</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="Assets/logo.png">
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="Assets/logo.png" alt="Logo">
+      <h2>SmartCampus</h2>
+    </div>
+    <nav>
+      <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="student-manage-events.html" class="active"><i class="fas fa-calendar-days"></i> Events</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="topbar">
+      <h1><i class="fas fa-calendar-week"></i> All Campus Events</h1>
+    </header>
+
+    <section class="content">
+      <table class="event-table" id="eventTable">
+        <thead>
+          <tr>
+            <th>Event Name</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Venue</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeFeedbackModal()">&times;</span>
+      <h2>Submit Feedback</h2>
+      <form id="feedbackForm">
+        <label for="rating">Rating (1-5):</label>
+        <select id="rating" required>
+          <option value="">Select Rating</option>
+          <option value="5">5 - Excellent</option>
+          <option value="4">4 - Good</option>
+          <option value="3">3 - Average</option>
+          <option value="2">2 - Poor</option>
+          <option value="1">1 - Very Poor</option>
+        </select>
+        <label for="comment">Comment:</label>
+        <textarea id="comment" rows="4" placeholder="Share your thoughts..."></textarea>
+        <button type="submit">Submit Feedback</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div id="notificationContainer" class="notification-container"></div>
+
+  <!-- 💬 Smart Campus Assistant -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-header" onclick="toggleChatbot()">
+      <span>💬 Smart Campus Assistant</span>
+      <span id="chatbotToggle">▲</span>
+    </div>
+
+    <div class="chatbot-body" id="chatbotBody">
+      <div id="chatbotMessages" class="chatbot-messages">
+        <div class="bot-message">Hi 👋! I'm your Smart Campus Assistant. How can I help you today?</div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbotInput" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="css/chatbot.css">
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/student-manage-events.js"></script>
+  <script src="js/chatbot.js"></script>
+</body>
+
+</html>

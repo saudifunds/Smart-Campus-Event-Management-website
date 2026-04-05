@@ -7,6 +7,7 @@
   <meta name="description" content="Smart Campus Event Management System - Manage events, rooms, and users efficiently">
   <meta name="keywords" content="campus management, event management, room booking, smart campus">
   <title>Smart Campus | Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" type="image/png" href="Assets/logo.png">
 </head>
@@ -26,6 +27,7 @@
     <header class="topbar">
       <h1 id="dashboardTitle">Dashboard</h1>
       <div class="actions">
+        <button id="themeToggle" class="btn">🌙 Dark Mode</button>
         <button class="btn" onclick="logout()">Logout</button>
       </div>
     </header>
@@ -54,6 +56,7 @@
   </div>
 
   <link rel="stylesheet" href="css/chatbot.css">
+  <script src="js/api.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/script.js"></script>
   <script src="js/chatbot.js"></script>

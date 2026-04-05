@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Login to Smart Campus Event Management System">
   <title>Smart Campus | Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" type="image/png" href="Assets/logo.png">
 </head>
@@ -32,7 +33,7 @@
       <h2>Login</h2>
       <input type="email" id="username" placeholder="Email" required />
       <input type="password" id="password" placeholder="Password" required />
-      <button onclick="loginUser()">Login</button>
+      <button onclick="loginUser()"><i class="fas fa-sign-in-alt"></i> Login</button>
       <p>
         <a href="signup.html">Create Account</a> |
         <a href="forgot.html">Forgot Password?</a>
@@ -41,6 +42,7 @@
     </div>
   </div>
 
+  <script src="js/api.js"></script>
   <script src="js/login.js"></script>
   <script>
     // Typing animation for login page
@@ -49,7 +51,7 @@
     let i = 0;
     function type() {
       if (i < text.length) {
-        el.textContent += text.charAt(i);
+        el.textContent = text.substring(0, i + 1);
         i++;
         setTimeout(type, 80);
       }
@@ -60,7 +62,7 @@
   <!-- 💬 Smart Campus Assistant -->
   <div class="chatbot-container" id="chatbotContainer">
     <div class="chatbot-header" onclick="toggleChatbot()">
-      <span>💬 Smart Campus Assistant</span>
+      <span><i class="fas fa-comment-dots"></i> Smart Campus Assistant</span>
       <span id="chatbotToggle">▲</span>
     </div>
 

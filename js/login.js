@@ -1,24 +1,30 @@
-function loginUser() {
+async function loginUser() {
   const email = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
   const message = document.getElementById("loginMessage");
 
-  const users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+  if (!email || !password) {
+    message.style.color = "red";
+    message.textContent = "Please enter email and password.";
+    return;
+  }
 
-  const user = users.find((u) => u.email === email && u.password === password);
+  try {
+    const data = await apiRequest("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
 
-  if (user) {
-    localStorage.setItem("loggedInUser", JSON.stringify(user));
-    localStorage.setItem("userRole", user.role);
+    setAuthSession(data.user);
 
     message.style.color = "green";
     message.textContent = "Login successful! Redirecting...";
     setTimeout(() => {
       window.location.href = "index.html";
     }, 1200);
-  } else {
+  } catch (err) {
     message.style.color = "red";
-    message.textContent = "Invalid credentials. Please try again.";
+    message.textContent = err.message || "Invalid credentials. Please try again.";
   }
 }
 
