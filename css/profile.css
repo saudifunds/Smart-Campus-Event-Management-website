@@ -4,16 +4,19 @@
 
 /* --- Profile Hero --- */
 .profile-hero {
-  background: #fff;
+  background: var(--card-bg);
+  /* flat background */
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(44, 26, 14, 0.08); /* Dark clay shadow */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  /* Glass shadow */
   overflow: hidden;
   margin-bottom: 24px;
 }
 
 .profile-banner {
   height: 140px;
-  background: linear-gradient(135deg, #2C1A0E, #5C3D2E, #8B6347); /* Deep clay gradient */
+  background: var(--hero-gradient);
+  /* Modern vibrant gradient */
   position: relative;
 }
 
@@ -35,7 +38,8 @@
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #C85A3C, #E06B4A); /* Terra cotta */
+  background: linear-gradient(135deg, var(--btn-primary), var(--accent));
+  /* Vibrant gradient */
   color: #fff;
   font-size: 36px;
   font-weight: 700;
@@ -78,7 +82,8 @@
 }
 
 .avatar-edit:hover {
-  background: #A34430; /* Darker terra cotta */
+  background: var(--btn-hover);
+  /* Darker terra cotta */
 }
 
 /* --- Profile Meta --- */
@@ -96,7 +101,7 @@
 
 .profile-badge {
   display: inline-block;
-  background: linear-gradient(135deg, #C85A3C, #E06B4A);
+  background: linear-gradient(135deg, var(--btn-primary), var(--accent));
   color: #fff;
   font-size: 12px;
   font-weight: 600;
@@ -109,7 +114,8 @@
 
 .profile-position {
   display: inline-block;
-  background: linear-gradient(135deg, #8B6347, #A37F63); /* Secondary warm brown */
+  background: linear-gradient(135deg, var(--secondary), #0369a1);
+  /* Secondary vibrant blue */
   color: #fff;
   font-size: 12px;
   font-weight: 600;
@@ -136,15 +142,16 @@
 }
 
 .stat-card {
-  background: #fff;
+  background: var(--card-bg);
+  /* flat background */
   border-radius: 14px;
   padding: 20px 24px;
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-left: 4px solid #C85A3C;
+  border-left: 4px solid var(--btn-primary);
 }
 
 .stat-card:hover {
@@ -152,7 +159,7 @@
   box-shadow: 0 6px 20px rgba(200, 90, 60, 0.12);
 }
 
-.stat-card > i {
+.stat-card>i {
   font-size: 28px;
   color: #C85A3C;
   width: 40px;
@@ -193,7 +200,7 @@
   background: #fff;
   border-radius: 16px;
   padding: 28px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
   margin-bottom: 0;
 }
 
@@ -289,14 +296,14 @@
   top: 3px;
   left: 3px;
   transition: left 0.3s;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
-.toggle-label input:checked + .toggle-slider {
+.toggle-label input:checked+.toggle-slider {
   background: #C85A3C;
 }
 
-.toggle-label input:checked + .toggle-slider::after {
+.toggle-label input:checked+.toggle-slider::after {
   left: 23px;
 }
 
@@ -328,7 +335,7 @@
 .profile-save-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(200, 90, 60, 0.35);
-  background: linear-gradient(135deg, #A34430, #C85A3C);
+  background: linear-gradient(135deg, var(--btn-hover), #C85A3C);
 }
 
 /* --- Sidebar Panels --- */
@@ -408,7 +415,7 @@
 [data-theme="dark"] .profile-card,
 [data-theme="dark"] .stat-card {
   background: #261810;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] .profile-meta h2,

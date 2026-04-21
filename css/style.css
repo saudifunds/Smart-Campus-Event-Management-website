@@ -3,34 +3,37 @@
    Professional Unified Stylesheet
    =============================== */
 
-/* ---- THEME VARIABLES (Clay · Beige · Cream) ---- */
-/* 60% Primary: Cream/Beige neutrals | 30% Secondary: Clay browns | 10% Accent: Terra Cotta */
+/* ---- THEME VARIABLES (Organic Health Green) ---- */
 :root {
-  --bg-color: #FAF6F0;          /* 60% — cream background */
-  --text-color: #2C1A0E;         /* dark clay text */
-  --sidebar-bg: linear-gradient(180deg, #2C1A0E, #5C3D2E); /* 30% — deep clay */
-  --sidebar-text: #F5ECD7;
-  --card-bg: #FDF9F4;            /* cream card surface */
-  --border-color: #DDBF99;       /* warm beige border */
-  --btn-primary: #C85A3C;        /* 10% — terra cotta accent */
-  --btn-hover: #A34430;
-  --accent: #C85A3C;
-  --secondary: #8B6347;          /* 30% secondary warm brown */
-  --muted: #C4A882;              /* soft beige muted text/icons */
+  --bg-color: #f3f2ea;
+  --text-color: #1d2c25;
+  --sidebar-bg: #004d40;
+  --sidebar-text: #ffffff;
+  --card-bg: #ffffff;
+  --border-color: #e5e4d8;
+  --btn-primary: #1b8a5a;
+  --btn-hover: #146c46;
+  --accent: #1b8a5a;
+  --secondary: #004d40;
+  --muted: #6e8579;
+  --bg-image: none;
+  --hero-gradient: #004d40;
 }
 
 [data-theme="dark"] {
-  --bg-color: #1A120A;
-  --text-color: #F5ECD7;
-  --sidebar-bg: linear-gradient(180deg, #0F0804, #2C1A0E);
-  --sidebar-text: #F5ECD7;
-  --card-bg: #261810;
-  --border-color: #5C3D2E;
-  --btn-primary: #E06B4A;
-  --btn-hover: #C85A3C;
-  --accent: #E06B4A;
-  --secondary: #8B6347;
-  --muted: #C4A882;
+  --bg-color: #121c17;
+  --text-color: #e8ede9;
+  --sidebar-bg: #0b261d;
+  --sidebar-text: #e8ede9;
+  --card-bg: #1c2b23;
+  --border-color: #2a4034;
+  --btn-primary: #1e9d65;
+  --btn-hover: #1b8a5a;
+  --accent: #1e9d65;
+  --secondary: #0b261d;
+  --muted: #8da697;
+  --bg-image: none;
+  --hero-gradient: #0b261d;
 }
 
 /* ---- GLOBAL ---- */
@@ -52,6 +55,8 @@ body {
 .sidebar {
   width: 250px;
   background: var(--sidebar-bg);
+  /* solid background */
+  border-right: 1px solid var(--border-color);
   color: var(--sidebar-text);
   padding: 20px;
   display: flex;
@@ -91,14 +96,14 @@ body {
 }
 
 .sidebar nav a {
-  color: #F5ECD7;
+  color: var(--sidebar-text);
 }
 
 .sidebar nav a:hover,
 .sidebar nav a.active {
-  background: rgba(200, 90, 60, 0.25);
+  background: rgba(99, 102, 241, 0.4);
   color: #FDEBD0;
-  border-left: 3px solid #C85A3C;
+  border-left: 3px solid var(--btn-primary);
 }
 
 /* ---- MAIN CONTENT ---- */
@@ -113,7 +118,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #ffffff;
+  background: var(--card-bg);
+  /* solid background */
+  border: 1px solid var(--border-color);
   padding: 15px 25px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -122,12 +129,12 @@ body {
 
 .topbar h1 {
   font-size: 20px;
-  color: #2C1A0E;
+  color: var(--text-color);
 }
 
 .topbar .btn {
   padding: 10px 18px;
-  background: #C85A3C;
+  background: var(--btn-primary);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -136,7 +143,7 @@ body {
 }
 
 .topbar .btn:hover {
-  background: #A34430;
+  background: var(--btn-hover);
 }
 
 /* ---- DASHBOARD CARDS ---- */
@@ -147,13 +154,14 @@ body {
 }
 
 .card {
-  background: #FDF9F4;
+  background: var(--card-bg);
+  /* no glass */
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
   text-align: center;
   transition: 0.3s ease;
-  border: 1px solid #EEDFC8;
+  border: 1px solid var(--border-color);
 }
 
 .card:hover {
@@ -163,19 +171,19 @@ body {
 
 .card h2 {
   font-size: 18px;
-  color: #5C3D2E;
+  color: var(--sidebar-bg);
   margin-bottom: 8px;
 }
 
 .card p {
   font-size: 30px;
   font-weight: 600;
-  color: #C85A3C;
+  color: var(--btn-primary);
 }
 
 /* ---- BUTTONS ---- */
 .btn {
-  background: #C85A3C;
+  background: var(--btn-primary);
   color: #fff;
   border: none;
   padding: 10px 18px;
@@ -186,7 +194,7 @@ body {
 }
 
 .btn:hover {
-  background: #A34430;
+  background: var(--btn-hover);
 }
 
 .btn.cancel {
@@ -216,20 +224,20 @@ td {
 }
 
 th {
-  background: #5C3D2E;
-  color: #F5ECD7;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
   font-size: 15px;
 }
 
 tr:hover {
-  background: #FDF0E4;
+  background: var(--bg-color);
 }
 
 td button {
   background: none;
   border: none;
   cursor: pointer;
-  color: #8B6347;
+  color: var(--secondary);
   margin-right: 10px;
   font-weight: 500;
 }
@@ -262,7 +270,7 @@ td button.delete {
 
 .modal-content h3 {
   margin-bottom: 15px;
-  color: #2C1A0E;
+  color: var(--text-color);
 }
 
 .modal-content form {
@@ -280,7 +288,7 @@ td button.delete {
 
 .modal-content input:focus,
 .modal-content select:focus {
-  border-color: #C85A3C;
+  border-color: var(--btn-primary);
   outline: none;
 }
 
@@ -312,7 +320,7 @@ td button.delete {
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-  border-color: #C85A3C;
+  border-color: var(--btn-primary);
   outline: none;
 }
 
@@ -344,7 +352,7 @@ td button.delete {
 }
 
 .role.Student {
-  background: #8B6347;
+  background: var(--secondary);
 }
 
 .role.Staff {
@@ -357,7 +365,7 @@ td button.delete {
 
 /* ===== EVENT STATUS COLORS ===== */
 .role.Upcoming {
-  background: #8B6347;
+  background: var(--secondary);
 }
 
 .role.Active {
@@ -377,7 +385,7 @@ td button.delete {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #2C1A0E, #5C3D2E);
+  background: linear-gradient(135deg, var(--text-color), var(--sidebar-bg));
 }
 
 .login-box {
@@ -390,7 +398,7 @@ td button.delete {
 }
 
 .login-box h2 {
-  color: #2C1A0E;
+  color: var(--text-color);
   margin-bottom: 20px;
   font-weight: 600;
 }
@@ -405,7 +413,7 @@ td button.delete {
 }
 
 .login-box input:focus {
-  border-color: #C85A3C;
+  border-color: var(--btn-primary);
   box-shadow: 0 0 5px rgba(200, 90, 60, 0.3);
   outline: none;
 }
@@ -416,8 +424,8 @@ td button.delete {
 
 /* ---- FOOTER ---- */
 footer {
-  background: #2C1A0E;
-  color: #F5ECD7;
+  background: var(--text-color);
+  color: var(--sidebar-text);
   text-align: center;
   padding: 12px 0;
   position: fixed;
@@ -449,74 +457,74 @@ footer {
 
 /* ====== DARK MODE (Clay/Beige Dark) ====== */
 .dark-mode {
-  background: #1A120A;
-  color: #F5ECD7;
+  background: var(--bg-color);
+  color: var(--sidebar-text);
 }
 
 .dark-mode .sidebar {
-  background: linear-gradient(180deg, #0F0804, #2C1A0E);
-  color: #F5ECD7;
+  background: linear-gradient(180deg, var(--bg-color), var(--text-color));
+  color: var(--sidebar-text);
 }
 
 .dark-mode .sidebar nav a {
-  color: #F5ECD7;
+  color: var(--sidebar-text);
 }
 
 .dark-mode .sidebar nav a.active,
 .dark-mode .sidebar nav a:hover {
-  background: rgba(200, 90, 60, 0.25);
+  background: rgba(99, 102, 241, 0.4);
   color: #FDEBD0;
-  border-left: 3px solid #C85A3C;
+  border-left: 3px solid var(--btn-primary);
 }
 
 .dark-mode .main {
-  background: #1A120A;
+  background: var(--bg-color);
 }
 
 .dark-mode .topbar {
-  background: #261810;
-  color: #F5ECD7;
+  background: var(--card-bg);
+  color: var(--sidebar-text);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .dark-mode .card {
-  background: #3A2518;
-  color: #F5ECD7;
+  background: var(--border-color);
+  color: var(--sidebar-text);
 }
 
 .dark-mode .card p {
-  color: #E06B4A;
+  color: var(--accent);
 }
 
 .dark-mode table {
-  background: #261810;
-  color: #F5ECD7;
+  background: var(--card-bg);
+  color: var(--sidebar-text);
 }
 
 .dark-mode th {
-  background: #3A2518;
+  background: var(--border-color);
 }
 
 .dark-mode tr:hover {
-  background: #3A2518;
+  background: var(--border-color);
 }
 
 .dark-mode .modal-content {
-  background: #3A2518;
-  color: #F5ECD7;
+  background: var(--border-color);
+  color: var(--sidebar-text);
 }
 
 .dark-mode .login-container {
-  background: linear-gradient(135deg, #0F0804, #2C1A0E);
+  background: linear-gradient(135deg, var(--bg-color), var(--text-color));
 }
 
 .dark-mode .login-box {
-  background: #261810;
-  color: #F5ECD7;
+  background: var(--card-bg);
+  color: var(--sidebar-text);
 }
 
 .dark-mode footer {
-  background: #0F0804;
+  background: var(--bg-color);
 }
 
 /* ===== COUNTDOWN TEXT ===== */
@@ -550,7 +558,7 @@ td[id^="countdown-"] {
 }
 
 .notification.info {
-  background: #8B6347;
+  background: var(--secondary);
 }
 
 .notification.success {
@@ -606,7 +614,7 @@ td[id^="countdown-"] {
 }
 
 .login-box button {
-  background: #C85A3C;
+  background: var(--btn-primary);
   color: #fff;
   padding: 10px;
   width: 100%;
@@ -617,7 +625,7 @@ td[id^="countdown-"] {
 }
 
 .login-box button:hover {
-  background: #A34430;
+  background: var(--btn-hover);
 }
 
 .card-grid {
@@ -639,8 +647,8 @@ td[id^="countdown-"] {
 }
 
 .card:hover {
-  background: linear-gradient(135deg, #5C3D2E, #8B6347);
-  color: #F5ECD7;
+  background: linear-gradient(135deg, var(--sidebar-bg), var(--secondary));
+  color: var(--sidebar-text);
   transform: translateY(-3px);
 }
 
@@ -670,7 +678,7 @@ td[id^="countdown-"] {
 .auth-visual {
   flex: 1;
   position: relative;
-  color: #2C1A0E;
+  color: var(--text-color);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -678,8 +686,8 @@ td[id^="countdown-"] {
   padding: 40px;
   overflow: hidden;
   text-align: center;
-  background: linear-gradient(135deg, #5C3D2E, #C85A3C);
-  color: #FAF6F0;
+  background: linear-gradient(135deg, var(--sidebar-bg), var(--btn-primary));
+  color: var(--bg-color);
 }
 
 .auth-visual h1 {
@@ -718,7 +726,7 @@ td[id^="countdown-"] {
 .shape1 {
   width: 150px;
   height: 150px;
-  background: #FAF6F0;
+  background: var(--bg-color);
   top: 10%;
   left: 15%;
   animation-delay: 0s;
@@ -736,7 +744,7 @@ td[id^="countdown-"] {
 .shape3 {
   width: 100px;
   height: 100px;
-  background: #C4A882;
+  background: var(--muted);
   top: 60%;
   left: 50%;
   animation-delay: 4s;
@@ -767,7 +775,7 @@ td[id^="countdown-"] {
 }
 
 .login-box h2 {
-  color: #2C1A0E;
+  color: var(--text-color);
   text-align: center;
   margin-bottom: 20px;
 }
@@ -789,8 +797,8 @@ td[id^="countdown-"] {
   height: 100vh;
   overflow: hidden;
   font-family: "Poppins", sans-serif;
-  background: linear-gradient(120deg, #2C1A0E, #8B6347);
-  color: #F5ECD7;
+  background: linear-gradient(120deg, var(--text-color), var(--secondary));
+  color: var(--sidebar-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -820,25 +828,25 @@ td[id^="countdown-"] {
 
 .s1 {
   width: 300px; height: 300px;
-  background: #C85A3C;
+  background: var(--btn-primary);
   top: -50px; left: -80px;
   animation-delay: 0s;
 }
 .s2 {
   width: 400px; height: 400px;
-  background: #FAF6F0;
+  background: var(--bg-color);
   bottom: -120px; right: -100px;
   animation-delay: 5s;
 }
 .s3 {
   width: 250px; height: 250px;
-  background: #5C3D2E;
+  background: var(--sidebar-bg);
   top: 40%; left: 10%;
   animation-delay: 10s;
 }
 .s4 {
   width: 350px; height: 350px;
-  background: #C4A882;
+  background: var(--muted);
   bottom: 20%; right: 30%;
   animation-delay: 15s;
 }
@@ -861,9 +869,9 @@ td[id^="countdown-"] {
 .auth-info h1 {
   font-size: 2.5em;
   font-weight: 700;
-  color: #FAF6F0;
+  color: var(--bg-color);
   white-space: nowrap;
-  border-right: 3px solid #C85A3C;
+  border-right: 3px solid var(--btn-primary);
   min-height: 1.2em;
   padding-right: 5px;
 }
@@ -881,7 +889,7 @@ td[id^="countdown-"] {
   top: 50%;
   transform: translateY(-50%);
   background: rgba(253, 249, 244, 0.95);
-  color: #2C1A0E;
+  color: var(--text-color);
   width: 360px;
   padding: 35px 30px;
   border-radius: 16px;
@@ -891,7 +899,7 @@ td[id^="countdown-"] {
 
 .auth-form h2 {
   text-align: center;
-  color: #2C1A0E;
+  color: var(--text-color);
   margin-bottom: 20px;
 }
 
@@ -909,7 +917,7 @@ td[id^="countdown-"] {
   padding: 10px;
   border: none;
   border-radius: 8px;
-  background: #C85A3C;
+  background: var(--btn-primary);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -917,11 +925,11 @@ td[id^="countdown-"] {
 }
 
 .auth-form button:hover {
-  background: #A34430;
+  background: var(--btn-hover);
 }
 
 .auth-form a {
-  color: #8B6347;
+  color: var(--secondary);
   text-decoration: none;
 }
 
@@ -979,18 +987,18 @@ td[id^="countdown-"] {
 
 .popup-content h3 {
   margin-top: 15px;
-  color: #C85A3C;
+  color: var(--btn-primary);
 }
 
 .popup-content p {
   font-size: 0.95em;
-  color: #5C3D2E;
+  color: var(--sidebar-bg);
 }
 
 /* loader animation */
 .loader {
-  border: 6px solid #FDF0E4;
-  border-top: 6px solid #C85A3C;
+  border: 6px solid var(--bg-color);
+  border-top: 6px solid var(--btn-primary);
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -1092,7 +1100,7 @@ td[id^="countdown-"] {
 
 .calendar-header h2 {
   font-size: 1.5em;
-  color: #2C1A0E;
+  color: var(--text-color);
   margin: 0;
   min-width: 200px;
   text-align: center;
@@ -1100,7 +1108,7 @@ td[id^="countdown-"] {
 
 .nav-btn {
   padding: 8px 16px;
-  background: #C85A3C;
+  background: var(--btn-primary);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -1110,7 +1118,7 @@ td[id^="countdown-"] {
 }
 
 .nav-btn:hover {
-  background: #A34430;
+  background: var(--btn-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(200, 90, 60, 0.3);
 }
@@ -1126,7 +1134,7 @@ td[id^="countdown-"] {
 .calendar-day-header {
   text-align: center;
   font-weight: 700;
-  color: #2C1A0E;
+  color: var(--text-color);
   padding: 10px;
   background: #FDF9F4;
   border-radius: 6px;
@@ -1139,8 +1147,8 @@ td[id^="countdown-"] {
 .calendar-day {
   position: relative;
   aspect-ratio: 1;
-  background: #FAF6F0;
-  border: 2px solid #DDBF99;
+  background: var(--bg-color);
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   padding: 8px;
   cursor: pointer;
@@ -1152,21 +1160,21 @@ td[id^="countdown-"] {
 }
 
 .calendar-day:not(.empty):hover {
-  background: #FDF0E4;
-  border-color: #C85A3C;
+  background: var(--bg-color);
+  border-color: var(--btn-primary);
   box-shadow: 0 4px 12px rgba(200, 90, 60, 0.2);
   transform: translateY(-2px);
 }
 
 .calendar-day.today {
-  background: #FDF0E4;
-  border-color: #E06B4A;
+  background: var(--bg-color);
+  border-color: var(--accent);
   font-weight: 700;
 }
 
 .calendar-day.selected {
-  background: #C85A3C;
-  border-color: #A34430;
+  background: var(--btn-primary);
+  border-color: var(--btn-hover);
   color: #fff;
 }
 
@@ -1181,13 +1189,13 @@ td[id^="countdown-"] {
 }
 
 .calendar-day.has-events {
-  background: linear-gradient(135deg, #FDF9F4 0%, #FDF0E4 100%);
+  background: linear-gradient(135deg, #FDF9F4 0%, var(--bg-color) 100%);
 }
 
 .day-number {
   font-weight: 700;
   font-size: 1.1em;
-  color: #2C1A0E;
+  color: var(--text-color);
   margin-bottom: 4px;
 }
 
@@ -1195,7 +1203,7 @@ td[id^="countdown-"] {
   position: absolute;
   top: 4px;
   right: 4px;
-  background: #C85A3C;
+  background: var(--btn-primary);
   color: #fff;
   border-radius: 50%;
   width: 24px;
@@ -1215,7 +1223,7 @@ td[id^="countdown-"] {
 }
 
 .event-dot.upcoming {
-  background: #8B6347;
+  background: var(--secondary);
 }
 
 .event-dot.active {
@@ -1233,14 +1241,14 @@ td[id^="countdown-"] {
   background: #FDF9F4;
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid #DDBF99;
+  border: 1px solid var(--border-color);
   height: fit-content;
   position: sticky;
   top: 100px;
 }
 
 .events-sidebar h3 {
-  color: #2C1A0E;
+  color: var(--text-color);
   margin-bottom: 15px;
   font-size: 1.1em;
 }
@@ -1257,12 +1265,12 @@ td[id^="countdown-"] {
   background: #FDF9F4;
   padding: 12px;
   border-radius: 8px;
-  border-left: 4px solid #C85A3C;
+  border-left: 4px solid var(--btn-primary);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .event-card.upcoming {
-  border-left-color: #8B6347;
+  border-left-color: var(--secondary);
   background: #FDF9F4;
 }
 
@@ -1279,7 +1287,7 @@ td[id^="countdown-"] {
 
 .event-card h4 {
   margin: 0 0 8px 0;
-  color: #2C1A0E;
+  color: var(--text-color);
   font-size: 0.95em;
 }
 
@@ -1299,7 +1307,7 @@ td[id^="countdown-"] {
 
 .event-card.upcoming .event-status-badge {
   background: #F5E6D8;
-  color: #8B6347;
+  color: var(--secondary);
 }
 
 .event-card.active .event-status-badge {
@@ -1334,7 +1342,7 @@ td[id^="countdown-"] {
   animation: slideIn 0.3s ease-out;
   pointer-events: auto;
   cursor: pointer;
-  border-left: 4px solid #C85A3C;
+  border-left: 4px solid var(--btn-primary);
   max-width: 350px;
 }
 
