@@ -1,0 +1,77 @@
+/* ========================================
+   Dark Professional Theme
+   ======================================== */
+
+:root {
+  --bg-color: #0a0e27;
+  --text-color: #e8ecf1;
+  --sidebar-bg: #111827;
+  --sidebar-text: #f3f4f6;
+  --card-bg: #1a202c;
+  --border-color: #374151;
+  --btn-primary: #1f2937;
+  --btn-hover: #111827;
+  --btn-text: #ffffff;
+  --accent: #60a5fa;
+  --secondary: #3b82f6;
+  --muted: #9ca3af;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --shadow-elevation-low: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-elevation-mid: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-elevation-high: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, var(--bg-color), #111a2e);
+  background-image: radial-gradient(ellipse at 20% 50%, rgba(96, 165, 250, 0.08) 0%, transparent 50%);
+  background-attachment: fixed;
+  color: var(--text-color);
+  transition: background-color 0.3s ease;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Button Styles */
+button {
+  font-family: inherit;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--card-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}
