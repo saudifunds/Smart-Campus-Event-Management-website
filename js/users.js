@@ -4,8 +4,22 @@ const openUserModal = document.getElementById("openUserModal");
 const closeUserModal = document.getElementById("closeUserModal");
 const userForm = document.getElementById("userForm");
 const editUserIndex = document.getElementById("editUserIndex");
+const userSearch = document.getElementById("userSearch");
 
 let users = [];
+
+// Initialize
+document.addEventListener("DOMContentLoaded", () => {
+  checkAuth();
+  renderSidebar();
+  loadUsers();
+
+  if (userSearch) {
+    userSearch.addEventListener("input", (e) => {
+      renderUsers(e.target.value);
+    });
+  }
+});
 
 async function loadUsers() {
   try {
@@ -14,27 +28,36 @@ async function loadUsers() {
   } catch (err) {
     console.error(err);
     userTable.innerHTML =
-      "<tr><td colspan='4'>Unable to load users from server (Admin only).</td></tr>";
+      "<tr><td colspan='5' style='text-align:center; padding: 40px;'>Unable to load users from server (Admin only).</td></tr>";
   }
 }
 
-function renderUsers() {
+function renderUsers(searchTerm = "") {
   userTable.innerHTML = "";
-  if (users.length === 0) {
-    userTable.innerHTML = "<tr><td colspan='4'>No users found.</td></tr>";
+  
+  const filteredUsers = users.filter(u => 
+    u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.role.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (filteredUsers.length === 0) {
+    userTable.innerHTML = `<tr><td colspan='5' style='text-align:center; padding: 40px; color: var(--muted);'>No users found ${searchTerm ? `matching "${searchTerm}"` : ""}.</td></tr>`;
     return;
   }
 
-  users.forEach((user, index) => {
+  filteredUsers.forEach((user) => {
+    const actualIndex = users.findIndex(u => u.id === user.id);
     const row = document.createElement("tr");
+    
     row.innerHTML = `
-      <td>${user.name}</td>
+      <td><strong>${user.name}</strong></td>
       <td>${user.email}</td>
       <td><span class="role ${user.role}">${user.role}</span></td>
-      <td>${user.position || '-'}</td>
+      <td>${user.position || '<span style="color:var(--muted)">-</span>'}</td>
       <td>
-        <button onclick="editEvent(${index})">Edit</button>
-        <button class="delete" onclick="deleteEvent(${index})">Delete</button>
+        <button onclick="editUser(${actualIndex})"><i class="fas fa-edit"></i> Edit</button>
+        <button class="delete" onclick="deleteUser(${actualIndex})"><i class="fas fa-trash"></i> Delete</button>
       </td>
     `;
     userTable.appendChild(row);
@@ -42,6 +65,7 @@ function renderUsers() {
 }
 
 openUserModal.addEventListener("click", () => {
+  document.getElementById("userModalTitle").textContent = "Add User";
   userModal.style.display = "flex";
   userForm.reset();
   editUserIndex.value = "";
@@ -81,21 +105,24 @@ userForm.addEventListener("submit", async (e) => {
   }
 });
 
-window.editEvent = function (index) {
+window.editUser = function (index) {
   const user = users[index];
+  if (!user) return;
+  
   document.getElementById("userName").value = user.name;
   document.getElementById("userEmail").value = user.email;
   document.getElementById("userRole").value = user.role;
   document.getElementById("userPosition").value = user.position || "";
   editUserIndex.value = index;
+  document.getElementById("userModalTitle").textContent = "Edit User";
   userModal.style.display = "flex";
 };
 
-window.deleteEvent = async function (index) {
+window.deleteUser = async function (index) {
   const user = users[index];
   if (!user || !user.id) return;
 
-  if (!confirm("Delete this user?")) return;
+  if (!confirm(`Are you sure you want to delete ${user.name}?`)) return;
 
   try {
     await apiRequest(`/users/${user.id}`, { method: "DELETE" });
@@ -104,5 +131,3 @@ window.deleteEvent = async function (index) {
     alert(err.message || "Unable to delete user.");
   }
 };
-
-loadUsers();

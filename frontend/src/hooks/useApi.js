@@ -9,18 +9,24 @@ export const useApi = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const request = useCallback(async (method, url, data = null, config = {}) => {
+  const request = useCallback(async (arg1, arg2, data = null, config = {}) => {
     setLoading(true);
     setError(null);
 
-    try {
-      const response = await axiosInstance({
-        method,
-        url,
+    let axiosConfig = {};
+    if (typeof arg1 === "object") {
+      axiosConfig = { ...arg1 };
+    } else {
+      axiosConfig = {
+        method: arg1,
+        url: arg2,
         data,
         ...config,
-      });
+      };
+    }
 
+    try {
+      const response = await axiosInstance(axiosConfig);
       setLoading(false);
       return response;
     } catch (err) {

@@ -57,7 +57,7 @@ const NotificationItem = ({ notification, onRemove }) => {
 /**
  * Notification container component
  */
-export const NotificationContainer = () => {
+const NotificationContainer = () => {
   const { notifications, removeNotification } = useNotificationStore();
 
   return (
@@ -72,3 +72,5 @@ export const NotificationContainer = () => {
     </div>
   );
 };
+
+export default NotificationContainer;

@@ -27,8 +27,8 @@ app.use(morgan("dev"));
 // Serve uploaded images
 app.use("/uploads", express.static(path.join(__dirname, "../../uploads")));
 
-// Serve the frontend static files (HTML, CSS, JS, Assets)
-const frontendPath = path.join(__dirname, "../../");
+// Serve the React frontend production build
+const frontendPath = path.join(__dirname, "../../frontend/build");
 app.use(express.static(frontendPath));
 
 const apiLimiter = rateLimit({
@@ -52,9 +52,18 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Fallback — serve index.html for any unmatched routes
+// Fallback — serve index.html for any unmatched routes (only if it exists)
 app.use((req, res) => {
-  res.sendFile(path.join(frontendPath, "index.html"));
+  const indexPath = path.join(frontendPath, "index.html");
+  if (require("fs").existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).json({
+      message: "Frontend build not found. Please run 'npm run build' in the frontend directory or use the development server on port 3000.",
+      port_3000: "http://localhost:3000",
+      api_info: "API is running on http://localhost:4000/api"
+    });
+  }
 });
 
 module.exports = app;

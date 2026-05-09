@@ -2,34 +2,26 @@
 
 A web-based event management system for campuses with role-based access control (Admin, Staff, Student).
 
-## Features
-
-- **Role-Based Access Control**: Different permissions for Admin, Staff, and Students
-- **Event Management**:
-  - **Admin & Staff**: Create, edit, and manage all campus events
-  - **Students**: View-only access to all campus events with status and countdown
-- **Calendar View**: Visual monthly calendar with event details (All roles)
-  - Click dates to see events
-  - Color-coded event status
-  - Event count badges
-- **Event Notifications**: Real-time alerts and reminders
-  - New event creation notifications
-  - 5-minute before event warning
-  - Event started notifications
-  - Dismissible toast notifications
-- **Room Management**: Track room availability, capacity, and status
-- **User Management**: Admin can manage users and their roles
-- **Real-time Event Status**: Live status updates (Upcoming/Active/Expired)
-- **Responsive Design**: Works on desktop and mobile devices
-- **Dark Mode Support**: Built-in dark mode styling
-
 ## Technology Stack
 
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Frontend (Legacy)**: HTML5, CSS3, JavaScript (ES6+)
+- **Frontend (Modern)**: React 19, Tailwind CSS, Zustand (State Management), React Router 6
 - **Backend**: Node.js (Express) with SQLite database
 - **Auth**: JWT (JSON Web Tokens) + bcrypt password hashing
 
-> The original version was fully client-side using localStorage; it has now been upgraded with a proper backend API.
+> [!NOTE]
+> The project is currently transitioning from a vanilla JS architecture to a modern React-based single-page application (SPA). Both versions are currently available, with the React version located in the `frontend/` directory.
+
+## Features
+
+- **Role-Based Access Control**: Different permissions for Admin, Staff, and Students.
+- **Student Event Submission**: Students with specific positions (e.g., Club President) can submit events for approval.
+- **Admin Approval Workflow**: Admins and Staff can review, approve, or deny student event requests.
+- **Event Management**: Admin & Staff can create, edit, and manage all campus events.
+- **Calendar View**: Visual monthly calendar with event details and status indicators.
+- **Real-time Notifications**: Toast alerts for event updates, reminders, and approval status.
+- **Analytics Dashboard**: Comprehensive overview of campus activity and engagement.
+- **Room & User Management**: Full CRUD operations for campus facilities and user permissions.
 
 ## Project Structure
 
@@ -100,9 +92,17 @@ The API base URL used by the frontend is:
 
 Keep this terminal window running while you use the frontend.
 
-### 2. Frontend (HTML/CSS/JS)
+### 2. Modern Frontend (React)
+```bash
+cd frontend
+npm install
+npm start
+```
+The React app will be available at `http://localhost:3000`.
 
-For quick local use you can open the HTML files directly in a browser, or serve the folder with a simple static server.
+### 3. Legacy Frontend (HTML/CSS/JS)
+For the vanilla version, you can open the HTML files directly in a browser or serve them with a static server.
+The legacy version is located in the root directory.
 
 ## Basic flow:
 

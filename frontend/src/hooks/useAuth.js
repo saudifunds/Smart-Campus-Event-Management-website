@@ -26,6 +26,7 @@ export const useAuth = () => {
   // Initialize auth from localStorage on mount
   useEffect(() => {
     initialize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Handle logout and redirect

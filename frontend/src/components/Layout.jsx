@@ -1,15 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../hooks";
 
 /**
  * Layout component with Sidebar and main content
  */
-export const Layout = ({ children }) => {
+const Layout = ({ children }) => {
   const { user, logout } = useAuth();
 
   const adminMenuItems = [
     { href: "/", label: "📊 Dashboard", roles: ["Admin", "Staff", "Student"] },
-    { href: "/events", label: "📅 Events", roles: ["Admin", "Staff"] },
+    { href: "/events", label: "📅 Manage Events", roles: ["Admin", "Staff"] },
+    { href: "/admin-approve-events", label: "✨ Approvals", roles: ["Admin", "Staff"] },
     { href: "/rooms", label: "🚪 Rooms", roles: ["Admin", "Staff", "Student"] },
     { href: "/users", label: "👥 Users", roles: ["Admin"] },
     {
@@ -18,12 +20,17 @@ export const Layout = ({ children }) => {
       roles: ["Admin", "Staff", "Student"],
     },
     { href: "/analytics", label: "📈 Analytics", roles: ["Admin"] },
+    { href: "/profile", label: "👤 Profile", roles: ["Admin", "Staff", "Student"] },
   ];
 
   const studentMenuItems = [
     { href: "/", label: "📊 Dashboard", roles: ["Student"] },
     { href: "/student-events", label: "📅 Events", roles: ["Student"] },
+    ...(user?.position
+      ? [{ href: "/student-submit-event", label: "✍️ Submit Event", roles: ["Student"] }]
+      : []),
     { href: "/calendar", label: "📆 Calendar", roles: ["Student"] },
+    { href: "/profile", label: "👤 Profile", roles: ["Student"] },
   ];
 
   const menuItems = ["Admin", "Staff"].includes(user?.role)
@@ -44,13 +51,13 @@ export const Layout = ({ children }) => {
 
         <nav className="p-6">
           {filteredMenuItems.map((item) => (
-            <a
+            <Link
               key={item.href}
-              href={item.href}
+              to={item.href}
               className="block px-4 py-3 rounded-lg hover:bg-indigo-800 transition-colors"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -76,3 +83,4 @@ export const Layout = ({ children }) => {
     </div>
   );
 };
+export default Layout;

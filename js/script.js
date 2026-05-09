@@ -19,6 +19,7 @@ function loadSidebar(role) {
       <a href="index.html" class="active"><i class="fas fa-home"></i> Dashboard</a>
       <a href="rooms.html"><i class="fas fa-door-open"></i> Rooms</a>
       <a href="events.html"><i class="fas fa-calendar-check"></i> Events</a>
+      <a href="admin-approve-events.html"><i class="fas fa-clipboard-check"></i> Approvals</a>
       <a href="calendar.html"><i class="fas fa-calendar-days"></i> Calendar</a>
       <a href="users.html"><i class="fas fa-users-gear"></i> Users</a>
       <a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a>
@@ -28,6 +29,7 @@ function loadSidebar(role) {
     menuHTML = `
       <a href="index.html" class="active"><i class="fas fa-home"></i> Dashboard</a>
       <a href="events.html"><i class="fas fa-tasks"></i> Manage Events</a>
+      <a href="admin-approve-events.html"><i class="fas fa-clipboard-check"></i> Approvals</a>
       <a href="calendar.html"><i class="fas fa-calendar-days"></i> Calendar</a>
       <a href="rooms.html"><i class="fas fa-building"></i> Check Rooms</a>
       <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
@@ -36,6 +38,7 @@ function loadSidebar(role) {
     if (user.position) {
       menuHTML = `
         <a href="index.html" class="active"><i class="fas fa-home"></i> Leader Dashboard</a>
+        <a href="student-submit-event.html"><i class="fas fa-paper-plane"></i> Submit Event</a>
         <a href="student-create-event.html"><i class="fas fa-plus-circle"></i> Create Event</a>
         <a href="student-manage-events.html"><i class="fas fa-list-check"></i> Manage Events</a>
         <a href="calendar.html"><i class="fas fa-calendar-days"></i> Calendar</a>
@@ -121,7 +124,9 @@ window.onload = () => {
   const user = JSON.parse(localStorage.getItem("loggedInUser"));
   if (user) {
     loadSidebar(user.role);
-    loadDashboard(user.role, user.name);
+    if (dashboardContent && dashboardTitle) {
+      loadDashboard(user.role, user.name);
+    }
   }
 };
 
@@ -143,4 +148,83 @@ if (themeToggle) {
     themeToggle.textContent =
       newTheme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
   });
+}
+
+// ===== Global Sidebar Renderer (for reusable pages) =====
+function renderSidebar() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  const sidebarMenu = document.getElementById("sidebarMenu");
+  if (!sidebarMenu) return;
+
+  let menuHTML = "";
+
+  if (user.role === "Admin") {
+    menuHTML = `
+      <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="rooms.html"><i class="fas fa-door-open"></i> Rooms</a>
+      <a href="events.html"><i class="fas fa-calendar-check"></i> Events</a>
+      <a href="admin-approve-events.html"><i class="fas fa-clipboard-check"></i> Approvals</a>
+      <a href="calendar.html"><i class="fas fa-calendar-days"></i> Calendar</a>
+      <a href="users.html"><i class="fas fa-users-gear"></i> Users</a>
+      <a href="analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a>
+      <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+    `;
+  } else if (user.role === "Staff") {
+    menuHTML = `
+      <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="events.html"><i class="fas fa-tasks"></i> Manage Events</a>
+      <a href="admin-approve-events.html"><i class="fas fa-clipboard-check"></i> Approvals</a>
+      <a href="calendar.html"><i class="fas fa-calendar-days"></i> Calendar</a>
+      <a href="rooms.html"><i class="fas fa-building"></i> Check Rooms</a>
+      <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+    `;
+  } else if (user.role === "Student") {
+    if (user.position) {
+      menuHTML = `
+        <a href="index.html"><i class="fas fa-home"></i> Leader Dashboard</a>
+        <a href="student-submit-event.html"><i class="fas fa-paper-plane"></i> Submit Event</a>
+        <a href="student-create-event.html"><i class="fas fa-plus-circle"></i> Create Event</a>
+        <a href="student-manage-events.html"><i class="fas fa-list-check"></i> Manage Events</a>
+        <a href="calendar.html"><i class="fas fa-calendar-days"></i> Calendar</a>
+        <a href="rooms.html"><i class="fas fa-building"></i> Available Rooms</a>
+        <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+      `;
+    } else {
+      menuHTML = `
+        <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="student-manage-events.html"><i class="fas fa-list"></i> Events</a>
+        <a href="calendar.html"><i class="fas fa-calendar-days"></i> Calendar</a>
+        <a href="rooms.html"><i class="fas fa-building"></i> Available Rooms</a>
+        <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+      `;
+    }
+  }
+
+  sidebarMenu.innerHTML = menuHTML;
+  setActiveNavLink();
+}
+
+// Helper to set active nav link
+function setActiveNavLink() {
+  const currentPage = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll(".sidebar nav a").forEach((link) => {
+    link.classList.remove("active");
+    if (link.getAttribute("href") === currentPage) {
+      link.classList.add("active");
+    }
+  });
+}
+
+// Helper function to check auth
+function checkAuth() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (!user) {
+    window.location.href = "login.html";
+  }
+  return user;
 }

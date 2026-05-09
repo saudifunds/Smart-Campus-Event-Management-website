@@ -9,3 +9,5 @@ export { default as Calendar } from "./Calendar";
 export { default as Profile } from "./Profile";
 export { default as Analytics } from "./Analytics";
 export { default as NotFound } from "./NotFound";
+export { default as AdminApproveEvents } from "./AdminApproveEvents";
+export { default as StudentSubmitEvent } from "./StudentSubmitEvent";

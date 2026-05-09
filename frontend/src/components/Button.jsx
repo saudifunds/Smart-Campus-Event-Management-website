@@ -3,7 +3,7 @@ import React from "react";
 /**
  * Basic Button component with variants
  */
-export const Button = React.forwardRef(
+const Button = React.forwardRef(
   (
     {
       className = "",
@@ -41,3 +41,5 @@ export const Button = React.forwardRef(
 );
 
 Button.displayName = "Button";
+
+export default Button;

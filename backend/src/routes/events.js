@@ -23,48 +23,56 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     // Save file with a unique name
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
 const upload = multer({ storage });
 
 // Get all events
 router.get("/", authMiddleware, (req, res) => {
-  let query = "SELECT id, name, date, start_time AS startTime, end_time AS endTime, venue, status, created_by, image_url AS imageUrl FROM events";
+  let query =
+    "SELECT id, name, date, start_time AS startTime, end_time AS endTime, venue, status, created_by, image_url AS imageUrl FROM events";
   let params = [];
-  
+
   if (req.user.role === "Student") {
     query += " WHERE status != 'Pending' OR created_by = ?";
     params.push(req.user.id);
   }
-  
+
   query += " ORDER BY date, start_time";
-  
+
   db.all(query, params, (err, rows) => {
-      if (err) {
-        console.error("Fetch events error:", err);
-        return res.status(500).json({ message: "Internal server error" });
-      }
-      res.json(rows);
+    if (err) {
+      console.error("Fetch events error:", err);
+      return res.status(500).json({ message: "Internal server error" });
     }
-  );
+    res.json(rows);
+  });
 });
 
 // Create event (Admin and Staff only)
-router.post("/", authMiddleware, upload.single("image"),
+router.post(
+  "/",
+  authMiddleware,
+  upload.single("image"),
   [
     body("name").trim().notEmpty().withMessage("Name is required"),
     body("date").notEmpty().withMessage("Valid date is required"),
     body("startTime").notEmpty().withMessage("Start time is required"),
     body("endTime").notEmpty().withMessage("End time is required"),
-    body("venue").trim().notEmpty().withMessage("Venue is required")
+    body("venue").trim().notEmpty().withMessage("Venue is required"),
   ],
   (req, res) => {
     let initialStatus = "Upcoming";
     if (!["Admin", "Staff"].includes(req.user.role)) {
       if (req.user.role === "Student" && req.user.position) {
-         initialStatus = "Pending";
+        initialStatus = "Pending";
       } else {
-         return res.status(403).json({ message: "Only administrators and student leaders can create events" });
+        return res
+          .status(403)
+          .json({
+            message:
+              "Only administrators and student leaders can create events",
+          });
       }
     }
     const errors = validationResult(req);
@@ -76,30 +84,56 @@ router.post("/", authMiddleware, upload.single("image"),
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     const stmt = db.prepare(
-      "INSERT INTO events (name, date, start_time, end_time, venue, status, created_by, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+      "INSERT INTO events (name, date, start_time, end_time, venue, status, created_by, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     );
-    stmt.run(name, date, startTime, endTime, venue, initialStatus, req.user.id, imageUrl, function (err) {
-      if (err) {
-        console.error("Create event error:", err);
-        return res.status(500).json({ message: "Internal server error" });
-      }
-      
-      if (initialStatus === "Upcoming") {
-        db.all("SELECT email FROM users WHERE role = 'Student'", [], (err, students) => {
-           if (!err && students.length > 0) {
-             const emails = students.map(s => s.email).join(", ");
-             sendEmail({
-               to: emails,
-               subject: `New Event: ${name}`,
-               text: `A new campus event "${name}" is scheduled on ${date} at ${startTime} in ${venue}. Log in to view details.`
-             });
-           }
-        });
-      }
+    stmt.run(
+      name,
+      date,
+      startTime,
+      endTime,
+      venue,
+      initialStatus,
+      req.user.id,
+      imageUrl,
+      function (err) {
+        if (err) {
+          console.error("Create event error:", err);
+          return res.status(500).json({ message: "Internal server error" });
+        }
 
-      res.status(201).json({ id: this.lastID, name, date, startTime, endTime, venue, status: initialStatus, imageUrl });
-    });
-});
+        if (initialStatus === "Upcoming") {
+          db.all(
+            "SELECT email FROM users WHERE role = 'Student'",
+            [],
+            (err, students) => {
+              if (!err && students.length > 0) {
+                const emails = students.map((s) => s.email).join(", ");
+                sendEmail({
+                  to: emails,
+                  subject: `New Event: ${name}`,
+                  text: `A new campus event "${name}" is scheduled on ${date} at ${startTime} in ${venue}. Log in to view details.`,
+                });
+              }
+            },
+          );
+        }
+
+        res
+          .status(201)
+          .json({
+            id: this.lastID,
+            name,
+            date,
+            startTime,
+            endTime,
+            venue,
+            status: initialStatus,
+            imageUrl,
+          });
+      },
+    );
+  },
+);
 
 // Get student's own events
 router.get("/my-events", authMiddleware, (req, res) => {
@@ -113,18 +147,21 @@ router.get("/my-events", authMiddleware, (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
       }
       res.json(rows);
-    }
+    },
   );
 });
 
 // Update event
-router.put("/:id", authMiddleware, upload.single("image"),
+router.put(
+  "/:id",
+  authMiddleware,
+  upload.single("image"),
   [
     body("name").trim().notEmpty().withMessage("Name is required"),
     body("date").notEmpty().withMessage("Valid date is required"),
     body("startTime").notEmpty().withMessage("Start time is required"),
     body("endTime").notEmpty().withMessage("End time is required"),
-    body("venue").trim().notEmpty().withMessage("Venue is required")
+    body("venue").trim().notEmpty().withMessage("Venue is required"),
   ],
   (req, res) => {
     const { id } = req.params;
@@ -132,30 +169,62 @@ router.put("/:id", authMiddleware, upload.single("image"),
     if (!errors.isEmpty()) {
       return res.status(400).json({ message: errors.array()[0].msg });
     }
-    
+
     const { name, date, startTime, endTime, venue, status } = req.body;
     const userId = req.user.id;
     const userRole = req.user.role;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-    db.get("SELECT created_by, image_url FROM events WHERE id = ?", [id], (err, event) => {
-      if (err) { return res.status(500).json({ message: "Internal server error" }); }
-      if (!event) { return res.status(404).json({ message: "Event not found" }); }
-      if (event.created_by !== userId && userRole === "Student") {
-        return res.status(403).json({ message: "You can only edit your own events" });
-      }
+    db.get(
+      "SELECT created_by, image_url FROM events WHERE id = ?",
+      [id],
+      (err, event) => {
+        if (err) {
+          return res.status(500).json({ message: "Internal server error" });
+        }
+        if (!event) {
+          return res.status(404).json({ message: "Event not found" });
+        }
+        if (event.created_by !== userId && userRole === "Student") {
+          return res
+            .status(403)
+            .json({ message: "You can only edit your own events" });
+        }
 
-      const finalImageUrl = imageUrl || event.image_url;
+        const finalImageUrl = imageUrl || event.image_url;
 
-      const stmt = db.prepare(
-        "UPDATE events SET name = ?, date = ?, start_time = ?, end_time = ?, venue = ?, status = ?, image_url = ? WHERE id = ?"
-      );
-      stmt.run(name, date, startTime, endTime, venue, status || event.status, finalImageUrl, id, function (err) {
-        if (err) { return res.status(500).json({ message: "Internal server error" }); }
-        res.json({ id: Number(id), name, date, startTime, endTime, venue, status: status || event.status, imageUrl: finalImageUrl });
-      });
-    });
-});
+        const stmt = db.prepare(
+          "UPDATE events SET name = ?, date = ?, start_time = ?, end_time = ?, venue = ?, status = ?, image_url = ? WHERE id = ?",
+        );
+        stmt.run(
+          name,
+          date,
+          startTime,
+          endTime,
+          venue,
+          status || event.status,
+          finalImageUrl,
+          id,
+          function (err) {
+            if (err) {
+              return res.status(500).json({ message: "Internal server error" });
+            }
+            res.json({
+              id: Number(id),
+              name,
+              date,
+              startTime,
+              endTime,
+              venue,
+              status: status || event.status,
+              imageUrl: finalImageUrl,
+            });
+          },
+        );
+      },
+    );
+  },
+);
 
 // Delete event
 router.delete("/:id", authMiddleware, (req, res) => {
@@ -164,47 +233,148 @@ router.delete("/:id", authMiddleware, (req, res) => {
   const userRole = req.user.role;
 
   db.get("SELECT created_by FROM events WHERE id = ?", [id], (err, event) => {
-    if (err) { return res.status(500).json({ message: "Internal server error" }); }
-    if (!event) { return res.status(404).json({ message: "Event not found" }); }
+    if (err) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
     if (event.created_by !== userId && userRole === "Student") {
-      return res.status(403).json({ message: "You can only delete your own events" });
+      return res
+        .status(403)
+        .json({ message: "You can only delete your own events" });
     }
 
     const stmt = db.prepare("DELETE FROM events WHERE id = ?");
     stmt.run(id, function (err) {
-      if (err) { return res.status(500).json({ message: "Internal server error" }); }
+      if (err) {
+        return res.status(500).json({ message: "Internal server error" });
+      }
       res.status(204).send();
     });
   });
 });
 
 // Approve event (Admin/Staff only)
-router.put("/:id/approve", authMiddleware, requireRole(["Admin", "Staff"]), (req, res) => {
-  const { id } = req.params;
-  
-  db.get("SELECT name, date, start_time, venue, status FROM events WHERE id = ?", [id], (err, event) => {
-     if (err || !event) return res.status(404).json({ message: "Event not found" });
-     if (event.status !== "Pending") return res.status(400).json({ message: "Event is not pending" });
-     
-     db.run("UPDATE events SET status = 'Upcoming' WHERE id = ?", [id], function (err) {
-        if (err) return res.status(500).json({ message: "Internal server error" });
-        
-        // Notify students it's approved
-        db.all("SELECT email FROM users WHERE role = 'Student'", [], (err, students) => {
-           if (!err && students.length > 0) {
-             const emails = students.map(s => s.email).join(", ");
-             sendEmail({
-               to: emails,
-               subject: `New Event: ${event.name}`,
-               text: `A new campus event "${event.name}" is scheduled on ${event.date} at ${event.start_time} in ${event.venue}. Log in to view details.`
-             });
-           }
-        });
+router.put(
+  "/:id/approve",
+  authMiddleware,
+  requireRole(["Admin", "Staff"]),
+  (req, res) => {
+    const { id } = req.params;
 
-        res.json({ message: "Event approved successfully" });
-     });
-  });
-});
+    db.get(
+      "SELECT name, date, start_time, venue, status FROM events WHERE id = ?",
+      [id],
+      (err, event) => {
+        if (err || !event)
+          return res.status(404).json({ message: "Event not found" });
+        if (event.status !== "Pending")
+          return res.status(400).json({ message: "Event is not pending" });
+
+        db.run(
+          "UPDATE events SET status = 'Upcoming' WHERE id = ?",
+          [id],
+          function (err) {
+            if (err)
+              return res.status(500).json({ message: "Internal server error" });
+
+            // Notify students it's approved
+            db.all(
+              "SELECT email FROM users WHERE role = 'Student'",
+              [],
+              (err, students) => {
+                if (!err && students.length > 0) {
+                  const emails = students.map((s) => s.email).join(", ");
+                  sendEmail({
+                    to: emails,
+                    subject: `New Event: ${event.name}`,
+                    text: `A new campus event "${event.name}" is scheduled on ${event.date} at ${event.start_time} in ${event.venue}. Log in to view details.`,
+                  });
+                }
+              },
+            );
+
+            res.json({ message: "Event approved successfully" });
+          },
+        );
+      },
+    );
+  },
+);
+
+// Deny event (Admin/Staff only)
+router.put(
+  "/:id/deny",
+  authMiddleware,
+  requireRole(["Admin", "Staff"]),
+  (req, res) => {
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    db.get(
+      "SELECT name, status, created_by FROM events WHERE id = ?",
+      [id],
+      (err, event) => {
+        if (err || !event)
+          return res.status(404).json({ message: "Event not found" });
+        if (event.status !== "Pending")
+          return res.status(400).json({ message: "Event is not pending" });
+
+        db.run(
+          "UPDATE events SET status = 'Denied' WHERE id = ?",
+          [id],
+          function (err) {
+            if (err)
+              return res.status(500).json({ message: "Internal server error" });
+
+            // Notify event creator
+            db.get(
+              "SELECT email, name FROM users WHERE id = ?",
+              [event.created_by],
+              (err, user) => {
+                if (!err && user) {
+                  sendEmail({
+                    to: user.email,
+                    subject: `Event "${event.name}" - Request Denied`,
+                    text: `Your event request "${event.name}" has been reviewed and denied.\nReason: ${reason || "No reason provided"}\nPlease contact the administration for more details.`,
+                  });
+                }
+              },
+            );
+
+            res.json({ message: "Event denied successfully" });
+          },
+        );
+      },
+    );
+  },
+);
+
+// Get pending events (Admin/Staff only)
+router.get(
+  "/pending/list",
+  authMiddleware,
+  requireRole(["Admin", "Staff"]),
+  (req, res) => {
+    db.all(
+      `SELECT e.id, e.name, e.date, e.start_time AS startTime, e.end_time AS endTime, e.venue, 
+            e.status, e.created_by, e.image_url AS imageUrl, u.name AS createdByName, u.email AS createdByEmail, u.position
+     FROM events e 
+     JOIN users u ON e.created_by = u.id 
+     WHERE e.status = 'Pending' 
+     ORDER BY e.created_at DESC`,
+      [],
+      (err, rows) => {
+        if (err) {
+          console.error("Fetch pending events error:", err);
+          return res.status(500).json({ message: "Internal server error" });
+        }
+        res.json(rows);
+      },
+    );
+  },
+);
 
 // Submit feedback
 router.post("/:id/feedback", authMiddleware, (req, res) => {
@@ -217,12 +387,20 @@ router.post("/:id/feedback", authMiddleware, (req, res) => {
   }
 
   db.get("SELECT id FROM events WHERE id = ?", [id], (err, event) => {
-    if (err) { return res.status(500).json({ message: "Internal server error" }); }
-    if (!event) { return res.status(404).json({ message: "Event not found" }); }
+    if (err) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
 
-    const stmt = db.prepare("INSERT INTO feedback (event_id, user_id, rating, comment) VALUES (?, ?, ?, ?)");
+    const stmt = db.prepare(
+      "INSERT INTO feedback (event_id, user_id, rating, comment) VALUES (?, ?, ?, ?)",
+    );
     stmt.run(id, userId, rating, comment || null, function (err) {
-      if (err) { return res.status(500).json({ message: "Internal server error" }); }
+      if (err) {
+        return res.status(500).json({ message: "Internal server error" });
+      }
       res.status(201).json({ message: "Feedback submitted successfully" });
     });
   });
@@ -237,11 +415,18 @@ router.get("/:id/feedback", authMiddleware, (req, res) => {
      WHERE f.event_id = ? ORDER BY f.created_at DESC`,
     [id],
     (err, rows) => {
-      if (err) { return res.status(500).json({ message: "Internal server error" }); }
+      if (err) {
+        return res.status(500).json({ message: "Internal server error" });
+      }
       const totalRating = rows.reduce((sum, row) => sum + row.rating, 0);
-      const averageRating = rows.length > 0 ? (totalRating / rows.length).toFixed(1) : 0;
-      res.json({ feedback: rows, averageRating: parseFloat(averageRating), count: rows.length });
-    }
+      const averageRating =
+        rows.length > 0 ? (totalRating / rows.length).toFixed(1) : 0;
+      res.json({
+        feedback: rows,
+        averageRating: parseFloat(averageRating),
+        count: rows.length,
+      });
+    },
   );
 });
 
@@ -251,23 +436,47 @@ router.get("/analytics", authMiddleware, requireRole(["Admin"]), (req, res) => {
   db.get("SELECT COUNT(*) AS totalEvents FROM events", [], (err, row) => {
     if (err) return res.status(500).json({ message: "Internal server error" });
     analytics.totalEvents = row.totalEvents;
-    db.all("SELECT status, COUNT(*) AS count FROM events GROUP BY status", [], (err, rows) => {
-      if (err) return res.status(500).json({ message: "Internal server error" });
-      analytics.eventsByStatus = rows;
-      db.all("SELECT venue, COUNT(*) AS count FROM events GROUP BY venue ORDER BY count DESC", [], (err, rows) => {
-        if (err) return res.status(500).json({ message: "Internal server error" });
-        analytics.roomUsage = rows;
-        db.all("SELECT role, COUNT(*) AS count FROM users GROUP BY role", [], (err, rows) => {
-          if (err) return res.status(500).json({ message: "Internal server error" });
-          analytics.usersByRole = rows;
-          db.all(`SELECT u.name, COUNT(e.id) AS eventsCreated FROM users u LEFT JOIN events e ON u.id = e.created_by GROUP BY u.id, u.name ORDER BY eventsCreated DESC LIMIT 10`, [], (err, rows) => {
-            if (err) return res.status(500).json({ message: "Internal server error" });
-            analytics.topEventCreators = rows;
-            res.json(analytics);
-          });
-        });
-      });
-    });
+    db.all(
+      "SELECT status, COUNT(*) AS count FROM events GROUP BY status",
+      [],
+      (err, rows) => {
+        if (err)
+          return res.status(500).json({ message: "Internal server error" });
+        analytics.eventsByStatus = rows;
+        db.all(
+          "SELECT venue, COUNT(*) AS count FROM events GROUP BY venue ORDER BY count DESC",
+          [],
+          (err, rows) => {
+            if (err)
+              return res.status(500).json({ message: "Internal server error" });
+            analytics.roomUsage = rows;
+            db.all(
+              "SELECT role, COUNT(*) AS count FROM users GROUP BY role",
+              [],
+              (err, rows) => {
+                if (err)
+                  return res
+                    .status(500)
+                    .json({ message: "Internal server error" });
+                analytics.usersByRole = rows;
+                db.all(
+                  `SELECT u.name, COUNT(e.id) AS eventsCreated FROM users u LEFT JOIN events e ON u.id = e.created_by GROUP BY u.id, u.name ORDER BY eventsCreated DESC LIMIT 10`,
+                  [],
+                  (err, rows) => {
+                    if (err)
+                      return res
+                        .status(500)
+                        .json({ message: "Internal server error" });
+                    analytics.topEventCreators = rows;
+                    res.json(analytics);
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   });
 });
 

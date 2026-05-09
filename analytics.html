@@ -1,52 +1,427 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics - Smart Campus</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Smart Campus Analytics - View event statistics, room usage, and user insights">
+  <title>Smart Campus | Analytics</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="Assets/logo.png">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <style>
+    /* ---- Analytics Page Styles ---- */
+    .analytics-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-elevation-low);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideInFromBottom 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    }
+
+    .stat-card:nth-child(1) { animation-delay: 0.05s; }
+    .stat-card:nth-child(2) { animation-delay: 0.1s; }
+    .stat-card:nth-child(3) { animation-delay: 0.15s; }
+    .stat-card:nth-child(4) { animation-delay: 0.2s; }
+
+    .stat-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(201, 120, 86, 0.06), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 0 28px var(--accent-glow), var(--shadow-elevation-mid);
+      border-color: var(--accent);
+    }
+
+    .stat-card:hover::before {
+      left: 100%;
+    }
+
+    .stat-card .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 22px;
+    }
+
+    .stat-card .stat-icon.events {
+      background: linear-gradient(135deg, rgba(201, 120, 86, 0.15), rgba(201, 120, 86, 0.05));
+      color: var(--accent);
+    }
+
+    .stat-card .stat-icon.users {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+      color: #3b82f6;
+    }
+
+    .stat-card .stat-icon.rooms {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+      color: #22c55e;
+    }
+
+    .stat-card .stat-icon.pending {
+      background: linear-gradient(135deg, rgba(249, 168, 37, 0.15), rgba(249, 168, 37, 0.05));
+      color: #f9a825;
+    }
+
+    .stat-card h3 {
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .stat-card .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text-color);
+      line-height: 1;
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .chart-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: var(--shadow-elevation-low);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideInFromBottom 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    }
+
+    .chart-card:nth-child(1) { animation-delay: 0.1s; }
+    .chart-card:nth-child(2) { animation-delay: 0.15s; }
+    .chart-card:nth-child(3) { animation-delay: 0.2s; }
+    .chart-card:nth-child(4) { animation-delay: 0.25s; }
+
+    .chart-card:hover {
+      box-shadow: 0 0 20px var(--accent-glow), var(--shadow-elevation-mid);
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    .chart-card h3 {
+      font-size: 16px;
+      color: var(--text-color);
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .chart-card .chart-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      max-height: 300px;
+    }
+
+    /* Top Creators Table */
+    .creators-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .creators-table thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .creators-table tbody td {
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .creators-table tbody tr {
+      transition: all 0.2s ease;
+    }
+
+    .creators-table tbody tr:hover {
+      background: rgba(201, 120, 86, 0.06);
+    }
+
+    .creator-rank {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .creator-rank.gold {
+      background: linear-gradient(135deg, rgba(249, 168, 37, 0.2), rgba(249, 168, 37, 0.08));
+      color: #f9a825;
+    }
+
+    .creator-rank.silver {
+      background: linear-gradient(135deg, rgba(156, 163, 175, 0.2), rgba(156, 163, 175, 0.08));
+      color: #9ca3af;
+    }
+
+    .creator-rank.bronze {
+      background: linear-gradient(135deg, rgba(201, 120, 86, 0.2), rgba(201, 120, 86, 0.08));
+      color: #c97856;
+    }
+
+    .creator-rank.default {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+    }
+
+    .event-count-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .event-count-bar .bar {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .event-count-bar .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), #c97856);
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .event-count-bar span {
+      font-weight: 700;
+      font-size: 14px;
+      min-width: 24px;
+      text-align: right;
+    }
+
+    /* Loading State */
+    .analytics-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      color: var(--muted);
+    }
+
+    .analytics-loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border-color);
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    /* Error State */
+    .analytics-error {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    .analytics-error i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+      color: var(--danger);
+    }
+
+    .analytics-error p {
+      margin-bottom: 16px;
+    }
+
+    /* Full-width chart */
+    .chart-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .report-stat {
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .report-stat strong {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+    .report-stat p {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .analytics-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Smart Campus Event Management</h1>
-        <nav>
-            <a href="index.html">Dashboard</a>
-            <a href="analytics.html" class="active">Analytics</a>
-            <a href="#" id="logout">Logout</a>
-        </nav>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="Assets/logo.png" alt="Logo">
+      <h2>SmartCampus</h2>
+    </div>
+    <nav id="sidebarMenu">
+      <!-- Sidebar items generated by JS -->
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="topbar">
+      <h1><i class="fas fa-chart-line" style="margin-right: 10px; color: var(--accent);"></i> System Analytics</h1>
+      <div class="actions">
+        <button class="btn secondary" onclick="openReportModal()"><i class="fas fa-file-pdf"></i> View Report</button>
+        <button id="themeToggle" class="btn">🌙 Dark Mode</button>
+        <button class="btn" onclick="logout()">Logout</button>
+      </div>
     </header>
 
-    <main>
-        <h2>Analytics Dashboard</h2>
-        <div class="analytics-grid">
-            <div class="chart-container">
-                <h3>Events by Status</h3>
-                <canvas id="eventsByStatusChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <h3>Room Usage</h3>
-                <canvas id="roomUsageChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <h3>Users by Role</h3>
-                <canvas id="usersByRoleChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <h3>Top Event Creators</h3>
-                <canvas id="topCreatorsChart"></canvas>
-            </div>
-        </div>
-        <div class="stats">
-            <div class="stat-card">
-                <h3>Total Events</h3>
-                <p id="totalEvents">0</p>
-            </div>
-        </div>
-    </main>
+    <section class="content" id="analyticsContent">
+      <!-- Loading state -->
+      <div class="analytics-loading" id="analyticsLoading">
+        <div class="spinner"></div>
+        <p>Loading analytics data...</p>
+      </div>
+    </section>
+  </main>
 
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/analytics.js"></script>
+  <!-- Report Modal -->
+  <div id="reportModal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid var(--accent); padding-bottom: 12px;">
+        <h2 style="margin: 0; color: var(--accent);"><i class="fas fa-file-alt"></i> Campus System Report</h2>
+        <span id="reportDate" style="font-size: 14px; color: var(--muted);"></span>
+      </div>
+
+      <div id="reportPrintArea">
+        <div class="analytics-stats" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 24px;">
+          <div class="report-stat">
+            <strong>Total Events</strong>
+            <p id="reportEvents">-</p>
+          </div>
+          <div class="report-stat">
+            <strong>Active Users</strong>
+            <p id="reportUsers">-</p>
+          </div>
+          <div class="report-stat">
+            <strong>Room Occupancy</strong>
+            <p id="reportRooms">-</p>
+          </div>
+          <div class="report-stat">
+            <strong>Pending Approvals</strong>
+            <p id="reportPending">-</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--text-color);">Executive Summary</h3>
+          <p id="reportSummary" style="font-size: 14px; line-height: 1.6; color: var(--muted);">
+            Generating executive summary based on live system data...
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; gap: 12px; margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 16px;">
+        <button class="btn" onclick="window.print()"><i class="fas fa-print"></i> Print PDF</button>
+        <button class="btn cancel" onclick="closeReportModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💬 Smart Campus Assistant -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-header" onclick="toggleChatbot()">
+      <span>💬 Smart Campus Assistant</span>
+      <span id="chatbotToggle">▲</span>
+    </div>
+
+    <div class="chatbot-body" id="chatbotBody">
+      <div id="chatbotMessages" class="chatbot-messages">
+        <div class="bot-message">Hi 👋! I'm your Smart Campus Assistant. How can I help you today?</div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbotInput" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="css/chatbot.css">
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/script.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/chatbot.js"></script>
 </body>
+
 </html>

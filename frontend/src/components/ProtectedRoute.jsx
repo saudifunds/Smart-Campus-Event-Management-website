@@ -5,7 +5,7 @@ import { useAuth } from "../hooks";
 /**
  * Protected Route component for role-based access control
  */
-export const ProtectedRoute = ({ children, allowedRoles = [] }) => {
+function ProtectedRoute({ children, allowedRoles = [] }) {
   const { isAuthenticated, user } = useAuth();
 
   if (!isAuthenticated) {
@@ -17,4 +17,6 @@ export const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   }
 
   return children;
-};
+}
+
+export default ProtectedRoute;

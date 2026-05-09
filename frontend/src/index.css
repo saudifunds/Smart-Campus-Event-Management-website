@@ -2,6 +2,10 @@
    Dark Professional Theme
    ======================================== */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --bg-color: #0a0e27;
   --text-color: #e8ecf1;

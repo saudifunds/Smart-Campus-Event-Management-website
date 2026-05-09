@@ -9,6 +9,8 @@ const accessRules = {
   "users.html": ["Admin"],
   "student-manage-events.html": ["Student"],
   "student-create-event.html": ["Student"],
+  "student-submit-event.html": ["Student-Organizer"], // Students with a position
+  "admin-approve-events.html": ["Admin", "Staff"], // Admin/Staff only
   "profile.html": ["Admin", "Staff", "Student"],
   "analytics.html": ["Admin"],
   "login.html": [],
@@ -33,7 +35,24 @@ window.addEventListener("DOMContentLoaded", () => {
   // Check role permissions
   if (user) {
     const allowedRoles = accessRules[currentPage];
-    if (allowedRoles && !allowedRoles.includes(user.role)) {
+    let hasAccess = false;
+
+    if (allowedRoles) {
+      // Check standard role access
+      if (allowedRoles.includes(user.role)) {
+        hasAccess = true;
+      }
+      // Check for Student-Organizer (student with position)
+      else if (
+        allowedRoles.includes("Student-Organizer") &&
+        user.role === "Student" &&
+        user.position
+      ) {
+        hasAccess = true;
+      }
+    }
+
+    if (!hasAccess && allowedRoles) {
       showAccessDenied();
       window.location.href = "index.html";
     }

@@ -10,12 +10,21 @@ async function loginUser() {
   }
 
   try {
+    console.log("🔐 Attempting login with:", email);
     const data = await apiRequest("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
 
+    console.log("✅ Login response received:", data);
+    console.log("Token in response?", !!data.token);
+
     setAuthSession(data.user);
+    if (data.token) {
+      console.log("📝 Saving token to localStorage...");
+      setAuthToken(data.token);
+      console.log("✅ Token saved. Check localStorage.getItem('authToken')");
+    }
 
     message.style.color = "green";
     message.textContent = "Login successful! Redirecting...";
@@ -23,8 +32,10 @@ async function loginUser() {
       window.location.href = "index.html";
     }, 1200);
   } catch (err) {
+    console.error("❌ Login error:", err);
     message.style.color = "red";
-    message.textContent = err.message || "Invalid credentials. Please try again.";
+    message.textContent =
+      err.message || "Invalid credentials. Please try again.";
   }
 }
 

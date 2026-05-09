@@ -62,14 +62,14 @@ Use this checklist to ensure your site is ready for production deployment.
 3. Select source branch (usually `main`)
 4. Your site will be at `username.github.io/repository-name`
 
-#### Option D: Traditional Web Server (Apache/Nginx)
-1. Upload all files via FTP/SFTP
-2. Ensure `index.html` is in root directory
-3. Configure server for:
-   - HTTPS (SSL certificate)
-   - Proper MIME types
-   - Error pages (404.html)
-4. Test all pages work correctly
+#### React Deployment (Modern)
+1. Update `API_BASE_URL` in `frontend/src/utils/constants.js`
+2. Run `npm run build` in `frontend/`
+3. Deploy the `frontend/build` folder to your static host (Netlify, Vercel, etc.)
+
+#### Legacy Deployment (Vanilla)
+1. Update `API_BASE_URL` in `js/api.js`
+2. Upload root HTML/CSS/JS files to your host.
 
 ### 2. Post-Deployment Tasks
 

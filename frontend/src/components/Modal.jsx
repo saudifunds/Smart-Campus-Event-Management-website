@@ -1,10 +1,9 @@
 import React from "react";
-import { Button } from "./Button";
 
 /**
  * Modal dialog component
  */
-export const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
+const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
   if (!isOpen) return null;
 
   const sizeClasses = {
@@ -34,3 +33,5 @@ export const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
     </div>
   );
 };
+
+export default Modal;

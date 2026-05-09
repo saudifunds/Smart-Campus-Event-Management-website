@@ -2,7 +2,17 @@
 const API_BASE_URL = "http://localhost:4000/api";
 
 function getAuthToken() {
-  return null;
+  return localStorage.getItem("authToken");
+}
+
+function setAuthToken(token) {
+  if (token) {
+    localStorage.setItem("authToken", token);
+  }
+}
+
+function clearAuthToken() {
+  localStorage.removeItem("authToken");
 }
 
 function setAuthSession(user) {
@@ -11,9 +21,13 @@ function setAuthSession(user) {
 
 async function clearAuthSession() {
   localStorage.removeItem("loggedInUser");
+  clearAuthToken();
   try {
-    await fetch(`${API_BASE_URL}/auth/logout`, { method: "POST", credentials: "include" });
-  } catch(e) {}
+    await fetch(`${API_BASE_URL}/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+  } catch (e) {}
 }
 
 async function apiRequest(path, options = {}) {
@@ -22,7 +36,11 @@ async function apiRequest(path, options = {}) {
   const headers = {
     ...(options.headers || {}),
   };
-  
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   if (!(options.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
@@ -50,11 +68,9 @@ async function apiRequest(path, options = {}) {
     // Handle network errors (server not running, CORS, etc.)
     if (err.message === "Failed to fetch" || err.name === "TypeError") {
       throw new Error(
-        "Cannot connect to server. Please make sure the backend server is running on http://localhost:4000"
+        "Cannot connect to server. Please make sure the backend server is running on http://localhost:4000",
       );
     }
     throw err;
   }
 }
-
-

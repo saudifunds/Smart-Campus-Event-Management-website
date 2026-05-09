@@ -11,6 +11,8 @@ export const ROUTE_ACCESS_RULES = {
   "/dashboard": [ROLES.ADMIN, ROLES.STAFF, ROLES.STUDENT],
   "/events": [ROLES.ADMIN, ROLES.STAFF],
   "/student-events": [ROLES.STUDENT],
+  "/admin-approve-events": [ROLES.ADMIN, ROLES.STAFF],
+  "/student-submit-event": [ROLES.STUDENT],
   "/rooms": [ROLES.ADMIN, ROLES.STAFF, ROLES.STUDENT],
   "/users": [ROLES.ADMIN],
   "/calendar": [ROLES.ADMIN, ROLES.STAFF, ROLES.STUDENT],
@@ -34,4 +36,4 @@ export const NOTIFICATION_TYPES = {
 };
 
 export const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:4000/api";
+  process.env.REACT_APP_API_BASE_URL || "/api";
