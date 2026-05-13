@@ -213,7 +213,7 @@ form.addEventListener("submit", async (e) => {
 });
 ```
 
-**Pattern**: Load → Render → Form submit → Reload. **No frameworks (React/Vue).** DOM state is authoritative source during session.
+**Pattern**: Load → Render → Form submit → Reload. **No frameworks (Vue).** DOM state is authoritative source during session.
 
 ### API Response Format
 

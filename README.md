@@ -5,12 +5,10 @@ A web-based event management system for campuses with role-based access control 
 ## Technology Stack
 
 - **Frontend (Legacy)**: HTML5, CSS3, JavaScript (ES6+)
-- **Frontend (Modern)**: React 19, Tailwind CSS, Zustand (State Management), React Router 6
 - **Backend**: Node.js (Express) with SQLite database
 - **Auth**: JWT (JSON Web Tokens) + bcrypt password hashing
 
 > [!NOTE]
-> The project is currently transitioning from a vanilla JS architecture to a modern React-based single-page application (SPA). Both versions are currently available, with the React version located in the `frontend/` directory.
 
 ## Features
 
@@ -92,15 +90,14 @@ The API base URL used by the frontend is:
 
 Keep this terminal window running while you use the frontend.
 
-### 2. Modern Frontend (React)
 ```bash
 cd frontend
 npm install
 npm start
 ```
-The React app will be available at `http://localhost:3000`.
 
 ### 3. Legacy Frontend (HTML/CSS/JS)
+
 For the vanilla version, you can open the HTML files directly in a browser or serve them with a static server.
 The legacy version is located in the root directory.
 
@@ -117,11 +114,13 @@ The legacy version is located in the root directory.
 ## Role-Based Event Access
 
 ### Admin & Staff (Officials)
+
 - **Page**: `events.html`
 - **Can**: Create new events, edit any event, delete any event
 - **Event Form**: Full event management with add/edit modal
 
 ### Student
+
 - **Page**: `student-manage-events.html`
 - **Can**: View all campus events with current status
 - **Status Display**: Upcoming, Active, or Expired
@@ -131,6 +130,7 @@ The legacy version is located in the root directory.
 ## Calendar View & Notifications
 
 ### Calendar Feature (`calendar.html`)
+
 - **Available to**: All authenticated users (Admin, Staff, Student)
 - **Features**:
   - Visual monthly calendar with all campus events
@@ -142,6 +142,7 @@ The legacy version is located in the root directory.
   - Event details sidebar with time, venue, status
 
 ### Event Notifications
+
 - **Real-time toast notifications** appear in top-right corner
 - **Notification Types**:
   - ✅ Success notifications - Event created/updated/deleted
@@ -171,6 +172,7 @@ The legacy version is located in the root directory.
 The frontend can be deployed to any static hosting service:
 
 #### **Netlify**
+
 1. Push code to GitHub/GitLab
 2. Connect repository to Netlify
 3. Set build command: (leave empty)
@@ -178,17 +180,20 @@ The frontend can be deployed to any static hosting service:
 5. Deploy!
 
 #### **Vercel**
+
 1. Install Vercel CLI: `npm i -g vercel`
 2. Run `vercel` in project root
 3. Follow prompts
 
 #### **GitHub Pages**
+
 1. Push code to GitHub repository
 2. Go to Settings > Pages
 3. Select source branch (usually `main`)
 4. Your site will be live at `username.github.io/repository-name`
 
 #### **Traditional Web Server (Apache/Nginx)**
+
 1. Upload all files to your web server
 2. Ensure `index.html` is in the root directory
 3. Configure server to serve index.html for all routes (see `.htaccess` for Apache)
@@ -270,10 +275,12 @@ The backend uses the following environment variables (optional):
 ## Troubleshooting
 
 ### Images Not Loading
+
 - Check that `Assets/logo.png` exists (case-sensitive on Linux)
 - Verify file paths in HTML files
 
 ### localStorage / Auth Issues
+
 - Ensure cookies/localStorage are enabled in browser.
 - Make sure the backend is running (`npm start` in the `backend/` folder).
 - Check the browser console and Network tab for failed API calls.
@@ -281,6 +288,7 @@ The backend uses the following environment variables (optional):
 ## Development Roadmap
 
 Potential improvements for production:
+
 - [x] Backend API integration
 - [x] Database storage
 - [x] Password encryption (bcrypt)
@@ -301,6 +309,7 @@ For issues or questions, please check the browser console for error messages and
 ---
 
 **Ready for Deployment Checklist (Frontend + Backend):**
+
 - ✅ All HTML files have proper meta tags
 - ✅ Asset paths are correct
 - ✅ Error page (404.html) created
